@@ -1,7 +1,12 @@
-﻿"""Recreate pristine simulation in memory and verify frozen raw artifacts."""
+"""Recreate pristine simulation in memory and verify frozen raw artifacts."""
 import json
+from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from contract import ROOT, COLUMNS, SANITY, hashes, read_tables, validation_errors
-from generate_dataset import simulate, inject_defects, fingerprints
+from synthetic_data_generator import simulate, inject_defects, fingerprints
 from verified_metrics import summarize
 
 def main():

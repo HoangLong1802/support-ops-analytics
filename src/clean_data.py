@@ -1,4 +1,4 @@
-﻿"""Evidence-based normalization, exclusion reconciliation and dependent quarantine."""
+"""Evidence-based normalization, exclusion reconciliation and dependent quarantine."""
 import json
 from collections import Counter
 import numpy as np
@@ -13,6 +13,7 @@ def clean(raw):
         removed[name]=int(frame.duplicated().sum())
         data[name]=frame.drop_duplicates().copy()
         data[name]["_source_row"]=data[name].index+2
+        # Quarantine every conflicting version: the source cannot identify a winner.
         conflict=conflict_mask(data[name].drop(columns="_source_row"),KEYS[name])
         if conflict.any():
             rejected=data[name].loc[conflict].copy()
@@ -90,21 +91,11 @@ def main():
         "","Raw SHA256 before and after cleaning: identical."]
     assert before==hashes(),"Cleaning altered raw files"
     (ROOT/"docs/cleaning_report.md").write_text("\n".join(lines)+"\n",encoding="utf-8")
-    decisions=["# Cleaning decisions","","Decisions use the independent assessment and executed cleaning counts. A source snapshot cannot establish a preferred version of conflicting records.","",
-        "| Issue | Evidence | Business impact | Decision | Reason |","|---|---|---|---|"]
-    decisions += [
-        f"| Exact copies | {sum(report['exact_copies_removed'].values())} redundant rows | Inflated volume/effort | AUTO-FIX | Remove only fully identical copies. |",
-        f"| Conflicting keys | {report['reason_counts']['tickets'].get('conflicting_key',0)} ticket versions | Ambiguous joins | QUARANTINE | Preserve every distinct version; no evidence supports a winner. |",
-        f"| Channel formatting | {report['transformations']['channel_normalized']} normalized rows | Split channel groups | AUTO-FIX | Case and surrounding spaces do not change meaning. |",
-        f"| Missing category, known unique subcategory | {report['transformations']['category_restored']} restored rows | Missing demand classification | AUTO-FIX | Approved hierarchy uniquely determines category. |",
-        "| Missing subcategory or both hierarchy fields | See cleaning reason counts | Unknown case mix | QUARANTINE | Category alone cannot identify a subcategory. |",
-        "| Invalid category/subcategory pair | See cleaning reason counts | Wrong routing and demand mix | QUARANTINE | Neither field establishes which value is correct. |",
-        f"| Invalid CSAT | {report['transformations']['invalid_csat_set_null']} scores replaced by null | Biased satisfaction | AUTO-FIX | Retain the ticket; score cannot be recovered or clamped. |",
-        "| Missing completed resolution, invalid event order, unknown owner | See cleaning reason counts | Invalid service timing or ownership | QUARANTINE | Snapshot provides no trustworthy repair evidence. |",
-        "| Invalid/orphan work logs and workforce capacity | See cleaning reason counts | Wrong handling and utilization | QUARANTINE | Remove invalid parents before dependent log validation. |",
-        "| Long logically valid durations | Duration percentiles in quality report | Long-tail mean bias | KEEP | External dependencies can legitimately delay completion. |",
-    ]
-    (ROOT/"docs/cleaning_decisions.md").write_text("\n".join(decisions)+"\n",encoding="utf-8")
+    (ROOT/"docs/cleaning_decisions.md").write_text(
+        "# Cleaning Decisions\n\n"
+        "Read [03 — Cleaning Decisions](03_cleaning_decisions.md) for the analyst decision table. "
+        "[The executed cleaning report](cleaning_report.md) contains reconciliation and reason counts.\n",
+        encoding="utf-8",newline="\n")
     (ROOT/"data/analytics/cleaning_audit.json").write_text(json.dumps(report,indent=2),encoding="utf-8")
     print(json.dumps(report,indent=2))
 

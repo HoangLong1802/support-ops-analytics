@@ -1,53 +1,48 @@
-﻿# Dashboard specification
+# Dashboard Specification
 
-Exactly three report pages. Use a restrained navy/teal palette, red for breaches, amber for pending, readable labels and consistent percentage denominators. Display a visible Synthetic data label and the fixed snapshot. No PBIX or screenshots are supplied. Build the report in Desktop using data_model.md and measures.dax, then capture actual screenshots in images/dashboard/.
+The intended report has **three pages**. Its purpose is to move from service risk to queue review, then to effort and capacity. The model, import CSVs and DAX source are ready; **no PBIX, executed DAX or screenshots are supplied**. Build and validate the report in Power BI Desktop before capturing real images in `images/dashboard/`.
+
+Use clear titles, explicit units and restrained colors. Final formatting and theme remain the report author's choice. Keep a visible **Synthetic data** label and snapshot **2026-10-01 00:00 Asia/Ho_Chi_Minh**. Use one compact card strip and a small set of question-driven visuals per page.
 
 ## Page 1 — Executive Overview
 
-Purpose: assess demand, service and customer experience.
-
-| Visual | Fields/measures | Decision supported |
+| Visual | Question answered | Fields / measures |
 |---|---|---|
-| KPI strip | Total Tickets, Overall SLA Compliance %, Average Resolution Hours, Average CSAT, Backlog, Reopen Rate | Identify service risks; tooltips show eligible and respondent counts |
-| Monthly demand line | month_start, Total Tickets, Previous Month Tickets | Review demand changes across full months |
-| SLA outcome columns | FR/Resolution/Overall MET, BREACHED, PENDING | Distinguish overdue work from undecided cases |
-| Category contribution bars | category, tickets and resolution breaches | Prioritize high-contribution cohorts |
-| Channel mix bars | channel, Total Tickets and share | Review contact mix |
-| Snapshot backlog summary | status and Backlog >24/48/72 Hours | Review aging cases at the fixed snapshot |
+| Card strip | How much demand, service risk and unresolved work is present? | Total Tickets; Overall SLA Compliance %; Average CSAT; Backlog; Reopen Rate |
+| Monthly demand line | Is the arrival cohort growing or shrinking across full months? | month_start; Total Tickets; MoM Ticket Change % |
+| SLA outcome columns | Which service stage misses targets, and how many cases remain pending? | FR / Resolution / Overall MET, BREACHED and PENDING counts |
+| Category contribution bars | Which categories contribute more breaches than their share of demand? | category; Ticket Share %; Resolution Breach Share % |
+| Backlog status and aging summary | How much unresolved work is already aged at this snapshot? | status; Backlog; Backlog >24 / >48 / >72 Hours |
 
-Use date, channel, priority and category slicers. Backlog thresholds are nested counts, not mutually exclusive bands. Resolution averages include legitimate long waits; show the median/P95 from the verified export in a tooltip or reference annotation.
+Tooltips show SLA eligible counts, CSAT responses and CSAT response rate. The backlog thresholds are nested counts, not mutually exclusive bands. Date, channel, priority and category slicers select ticket cohorts; the snapshot itself does not move.
 
 ## Page 2 — Operations Analysis
 
-Purpose: locate demand concentrations and service bottlenecks.
-
-| Visual | Fields/measures | Decision supported |
+| Visual | Question answered | Fields / measures |
 |---|---|---|
-| Weekday demand bars | weekday_name, average tickets per calendar day | Compare weekdays fairly using available dates |
-| Local-hour arrival bars | local_created_hour, Total Tickets | Review demand timing; no exact staffing-gap claim |
-| Category/subcategory matrix | category, subcategory, Total Tickets | Identify specific routing/training review areas |
-| Priority comparison | priority, FR/Resolution SLA Compliance % | Compare outcomes against priority-specific targets |
-| Breach contribution bars | category, Resolution SLA Breached, share of total breaches | Separate volume contribution from breach rate |
-| Resolution distribution | resolution_minutes / 60 in explicit elapsed-time bands | Show long-tail delays; never label this handling time |
-| Snapshot aging bands | <=24h, 24–48h, 48–72h, >72h | Review mutually exclusive backlog age cohorts |
+| Weekday demand bars | Which weekdays have the highest average arrivals per calendar day? | weekday_name; Average Daily Tickets |
+| Local-hour arrival bars | When do tickets arrive during the day? | local_created_hour; Total Tickets |
+| Category/subcategory matrix | Which case types combine substantial demand and weak resolution service? | category; subcategory; Total Tickets; Resolution SLA Compliance % |
+| Priority and channel comparison | How does service vary against each cohort's policy targets? | priority; channel; FR / Resolution SLA Compliance %; eligible counts |
+| Resolution distribution | How large are the long waits compared with typical completion time? | completed-ticket elapsed resolution bands; median and P95 measures in tooltip |
+| Snapshot aging bands | Which categories contain backlog older than 48 or 72 hours? | category; mutually exclusive <=24h / 24–48h / 48–72h / >72h bands |
 
-All hourly/weekday labels use Asia/Ho_Chi_Minh. Completed-only resolution distributions exclude unresolved cases and therefore have censoring limitations. Tooltips show denominator and retained sample size.
+Create resolution and aging bands from the imported duration fields in Power Query. Use <= boundaries for the upper limit of each finite band. Completed-only resolution excludes unresolved cases; never label it handling time. Arrival hours use Asia/Ho_Chi_Minh and cannot establish hourly staffing gaps. Average Daily Tickets includes every selected calendar date, including zero arrivals.
 
 ## Page 3 — Agent & Team Performance
 
-Purpose: review effort, capacity and service outcomes with case mix.
-
-| Visual | Fields/measures | Decision supported |
+| Visual | Question answered | Fields / measures |
 |---|---|---|
-| Handling effort bars | handling agent/team, Handling Hours | Review effort concentration |
-| Utilization matrix | agent/team/work date, Utilization % | Identify daily capacity pressure; null at zero capacity |
-| Final ownership bars | final owner/team, Total Tickets | Review ownership distribution |
-| Owner SLA comparison | owner, Overall SLA Compliance %, eligible count | Review outcomes with sufficient observations |
-| CSAT table | owner, Average CSAT, CSAT Responses, CSAT Response Rate | Expose nonresponse and small samples |
-| Reopen comparison | owner, Reopen Rate, ticket count | Review rework associations; not FCR |
-| Case-mix matrix | owner/team, category, priority, ticket count | Interpret differences in assignment complexity proxies |
+| Handling effort bars | Which actual handlers and teams carry the most recorded work? | agent/team; Handling Hours |
+| Daily utilization matrix | Where does workload press against productive capacity? | agent/team/work date; Utilization %; capacity and effort in tooltip |
+| Final-owner service table | Which ownership cohorts warrant review after considering sample size? | final owner; Total Tickets; Overall SLA Compliance %; eligible count |
+| Customer outcome table | Which ownership cohorts have poor respondent CSAT or more reopens? | Average CSAT; CSAT Responses; CSAT Response Rate; Reopen Rate; ticket count |
+| Case-mix matrix | Could assignment mix help explain differences in owner outcomes? | final owner/team; category; priority; ticket count |
 
-Agent/team and work/creation-date slicers filter shared dimensions. Category/channel/priority interactions apply to ticket outcome visuals only; keep full-capacity effort visuals explicitly scoped. Daily staffing estimates may appear in the utilization tooltip with the 85% assumption, without adding a fourth page. Avoid a single agent league table based on raw ticket counts.
+Add the daily staffing estimate to the utilization tooltip for the matching team/work date, with the **85% target** and **four prior matching weekdays** stated. Insufficient history returns blank. FTE gaps are equivalent-capacity planning signals, not headcount or exact shifts.
 
-After building: check unfiltered cards against verified_kpis.csv, test slicers and relationship direction, inspect missing values and partial date windows, and save real screenshots. This document specifies the intended report; it does not claim a rendered dashboard exists.
+Shared agent filters represent **final owner** for ticket outcomes and **actual handler** for effort/capacity. Date filters represent creation dates and work dates, respectively. Category/channel/priority affect ticket outcomes only; disable their interactions with full-capacity visuals and label the scope. Avoid a single agent league table that ignores case mix and hire dates.
 
+## Desktop Validation
+
+With filters cleared, reconcile cards and all SLA outcome counts to `data/analytics/verified_kpis.csv`. Test date, category, channel, priority and agent interactions; validate BLANK at zero capacity and exclusion of PENDING from compliance. Check weekday sorting, zero-arrival dates, partial rolling windows and snapshot labels. Save the actual PBIX and capture screenshots only after those checks pass.

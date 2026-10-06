@@ -1,5 +1,8 @@
-﻿"""Seeded operational simulation; validated pristine records precede defect injection."""
-import argparse
+"""Seeded operational simulation; validated pristine records precede defect injection."""
+from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 import io
 import json
 import platform
@@ -297,23 +300,16 @@ def report(pristine,raw,params,history,defects,reproducible):
     (ROOT/"docs/generation_report.md").write_text("\n".join(lines)+"\n",encoding="utf-8")
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--recover-invalid",action="store_true",help="Replace a rejected build only when its verified recovery archive exists")
-    args = parser.parse_args()
     existing = any((ROOT/"data/raw"/f"{n}.csv").exists() for n in COLUMNS)
     manifest_path = ROOT/"data/analytics/generation_metadata.json"
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
-    if existing and not args.recover_invalid:
+    if existing:
         if not manifest_path.exists():
-            raise RuntimeError("Existing raw data has no validated manifest; preserve it and explicitly recover the invalid build")
+            raise RuntimeError("Existing raw data has no validated manifest; archive it and use a separate working copy")
         manifest = json.loads(manifest_path.read_text())
         assert hashes()==manifest["hashes"], "Frozen raw file changed"
         print("Existing validated raw artifacts reused; no data overwritten")
         return
-    if existing and args.recover_invalid:
-        if manifest_path.exists():
-            raise RuntimeError("A validated raw snapshot cannot be overwritten; use a new working copy")
-        assert (ROOT/"_backups/rejected_existing_build.zip").exists(), "Recovery archive required"
     pristine,params,history = calibrate()
     repeated = simulate(params)
     assert fingerprints(pristine)==fingerprints(repeated), "Pristine reproducibility failed"

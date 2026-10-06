@@ -1,4 +1,4 @@
-﻿import json
+import json
 import sys
 import unittest
 from pathlib import Path
@@ -7,8 +7,9 @@ import pandas as pd
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/"src"))
+sys.path.insert(0,str(ROOT/"tools"))
 from contract import COLUMNS, KEYS, PAIRS, SNAPSHOT, SANITY, read_tables, hashes, timestamps, rule_masks, validation_errors, conflict_mask
-from generate_dataset import simulate, inject_defects, fingerprints
+from synthetic_data_generator import simulate, inject_defects, fingerprints
 from assess_data_quality import assess
 from clean_data import clean
 from verified_metrics import summarize, ticket_metrics, workforce_metrics

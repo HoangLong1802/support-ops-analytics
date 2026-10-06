@@ -1,4 +1,4 @@
-﻿# SQL analysis guide
+# SQL analysis guide
 
 Execution status: scripts ready only. No MySQL client or service was found in the build environment; these scripts have not been executed against MySQL. Portfolio findings use the executed Python exports.
 
@@ -8,11 +8,13 @@ From the repository root, connect to a trusted local server with the client's lo
 
 ```text
 mysql --local-infile=1 -h 127.0.0.1 -u YOUR_USER -p
-SOURCE database/schema.sql;
+SOURCE sql/01_data_model.sql;
 SOURCE database/import.sql;
-SOURCE database/views.sql;
+SOURCE sql/02_kpi_definitions.sql;
 SOURCE database/validation.sql;
-SOURCE database/analysis.sql;
+SOURCE sql/03_operations_analysis.sql;
+SOURCE sql/04_customer_analysis.sql;
+SOURCE sql/05_workforce_analysis.sql;
 ```
 
 The server must also allow local file imports. If it does not, ask its administrator to configure this dedicated environment; the scripts do not change global settings. Imported timestamps are UTC DATETIME values. Reporting dates/hours add the fixed UTC+07:00 offset used by Asia/Ho_Chi_Minh during this coverage year, without depending on installed server timezone tables.
@@ -21,7 +23,7 @@ Inspect every SHOW WARNINGS result immediately after loading. LOCAL imports can 
 
 Duration queries use nearest-rank P90/P95 for readable MySQL SQL; pandas uses linear interpolation. SLA and count calculations must match exactly, while percentile estimates can differ slightly by the documented estimator. Week-over-week comparisons exclude partial boundary weeks. Rolling averages include zero-arrival calendar days.
 
-Business queries cover demand, mix, service outcomes, breach contribution, satisfaction/nonresponse, reopens, fixed-snapshot backlog, ownership, handling effort, case mix and operational review priorities. Agent outcomes are final-owner associations, not causal measures of individual ability. Workforce facts are aggregated separately before joins to prevent multiplicative ticket/log fanout.
+The [SQL navigation](../sql/README.md) organizes queries by business purpose: model, KPIs, operations, customers and workforce. Agent outcomes are final-owner associations, not causal measures of individual ability. Workforce facts are aggregated separately before joins to prevent multiplicative ticket/log fanout. The earlier database/schema.sql, views.sql and analysis.sql paths remain compatibility entrypoints.
 
 References: [MySQL CTE syntax](https://dev.mysql.com/doc/refman/8.0/en/with.html), [local import requirements](https://dev.mysql.com/doc/refman/8.0/en/load-data-local-security.html), [LOAD DATA behavior](https://dev.mysql.com/doc/refman/8.0/en/load-data.html).
 

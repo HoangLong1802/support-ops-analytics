@@ -1,23 +1,38 @@
-﻿# Data lineage
+# Data Lineage
 
-Synthetic Operational Source → Raw CSV → Data Quality Assessment → Cleaning Decisions → Processed Data → Relational Model → SQL Analysis → Power BI → Business Insights → Recommendations
+```text
+Business Question & Source Understanding
+                 ↓
+Synthetic Source → Raw CSV
+                 ↓
+Data Quality Assessment
+                 ↓
+Cleaning Decisions → Processed Data + Quarantine
+                 ↓
+Data Model → MySQL / SQL
+                 ↓
+Power BI Specification
+                 ↓
+Insights & Recommendations
+```
 
-| Layer | Artifact | Purpose |
+| Step | Read | Run / inspect |
 |---|---|---|
-| Synthetic operational source | src/generate_dataset.py | Seeded arrivals, lifecycles, routing, effort and workforce; pristine validation before intentional defects |
-| Raw CSV | data/raw/ | Five immutable operational extracts; generation report records SHA256 |
-| Quality assessment | src/assess_data_quality.py; docs/data_quality_report.md | Independently profile values, keys, types, relationships and operational rules |
-| Cleaning decisions | docs/cleaning_decisions.md | Explain evidence, business impact, safe fixes and exclusions |
-| Processed data | data/processed/; data/quarantine/ | Canonical records plus preserved exclusions; complete row reconciliation |
-| Relational model | database/schema.sql; import.sql | Seven tables, dimensional keys, foreign keys and useful indexes |
-| SQL analysis | database/views.sql; analysis.sql | Canonical service fields and business questions; execution status in sql_analysis_guide.md |
-| Power BI | powerbi/; derived CSVs in data/analytics/ | Shared dimensions, consistent measures and three-page report specification |
-| Business insights | docs/insights.md; verified_kpis.csv | Executed Python evidence with denominators and limitations |
-| Recommendations | docs/insights.md | Specific operational review actions supported by the observed synthetic cohorts |
+| Business problem | [Business Context](01_business_context.md) | Questions that determine reporting scope |
+| Source understanding | [Data Dictionary](data_dictionary.md) | Five source grains, optional fields and relationships |
+| Synthetic operational source | [Generation evidence](generation_report.md) | tools/synthetic_data_generator.py; tools/validate_generation.py |
+| Raw data | Five unchanged extracts | data/raw/ |
+| Quality assessment | [Data Quality](02_data_quality.md); detailed report | src/assess_data_quality.py; data/analytics/quality_audit.json |
+| Cleaning decisions | [Cleaning Decisions](03_cleaning_decisions.md) | src/clean_data.py; cleaning_report.md |
+| Processed data | Valid observations and preserved exclusions | data/processed/; data/quarantine/; src/validate_clean_data.py |
+| Data model | [Analytical Model](04_data_model.md) | sql/01_data_model.sql; database/import.sql |
+| SQL analysis | [SQL guide](../sql/README.md) | sql/02–05; database/validation.sql |
+| Power BI | [Model](../powerbi/data_model.md); [report questions](../powerbi/dashboard_spec.md) | measures.dax; analytical CSV imports |
+| Insights and actions | [Business Insights](05_business_insights.md) | src/verified_metrics.py; src/build_portfolio.py |
+| Daily capacity planning | [Workforce Methodology](workforce_methodology.md) | src/staffing_analysis.py; staffing_daily.csv |
 
-src/verified_metrics.py is the canonical executed snapshot KPI layer. SQL views implement the same component outcomes and denominators. Power BI imports the executed derived ticket fields and uses measures for filter-aware aggregation. src/staffing_analysis.py uses handling-agent/day effort and recorded productive capacity; it does not treat resolution waiting as handling effort.
+The synthetic operational source makes the project reproducible. Assessment detects defects from records and business rules, independently of generated defect identifiers. Raw SHA256 values are checked before and after the analytical steps.
 
-Raw SHA256 is checked before and after assessment, cleaning and analytics. Independent assessment never uses generated bad-record identifiers or expected defect counts to detect issues. Exact copies are separated from conflicting keys before downstream joins; exclusions preserve original source row numbers and reasons.
+Python provides the executed KPI and cohort evidence. SQL and Power BI are the prepared reporting path; native query, DAX and rendered-report validation remain pending. [Shared KPI definitions](kpi_definitions.md) make that boundary explicit.
 
-Creation-date trends describe arriving ticket cohorts. Backlog is known only at the fixed snapshot. SQL and Power BI execution require their native tools; the supplied sources do not imply execution or rendered report creation.
-
+Creation-date trends describe arriving ticket cohorts. Backlog is known only at the fixed snapshot. Final ticket ownership and actual handling effort have different meanings and stay separate through the model.

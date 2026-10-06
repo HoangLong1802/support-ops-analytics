@@ -1,82 +1,82 @@
 # Customer Support Operations Analytics
 
-A synthetic Data Analyst portfolio project connecting operational data quality to service, customer experience and daily capacity decisions.
+This project examines missed support commitments and daily workload against capacity. **The dataset is synthetic:** five operational sources cover 18 agents across three teams from October 2025 through September 2026. Quality assessment and cleaning retain 14,774 ticket snapshots for operational analysis.
 
-## Business problem
+## Business Problem
 
-Support leaders need to understand demand, SLA risks, snapshot backlog and workload differences before adjusting operations. The analysis uses ticket ownership, actual handling effort and workforce capacity separately, with explicit limits on inference.
+Support managers need to see where service deteriorates, which segments contribute SLA breaches, where backlog accumulates, when demand arrives, and whether workload aligns with capacity. The aim is to identify queues to investigate before changing staffing.
 
-## Analytical workflow
+## Analytical Workflow
 
-Business questions → raw data → independent quality assessment → cleaning decisions → processed data → SQL → Power BI → verified insights and recommendations.
+**Business Question → Raw Data → Data Quality → Cleaning → Data Model → SQL Analysis → Power BI → Recommendations**
 
-## Dataset
+Sources: tickets, work logs, workforce, agents and SLA policies. I establish source meaning before assessing repeated observations, ambiguous identities and impossible lifecycles. Cleaning produces reconciled processed and quarantine outputs while preserving valid unusual cases. The model separates ticket outcomes from handling effort. Python provides executed evidence; SQL and Power BI carry the same definitions into reporting.
 
-**All data is synthetic.** There are 15,000 logical tickets before defects, 18 agents in three teams and 365 local operational dates. Coverage is 2025-10-01 through 2026-09-30; snapshot is 2026-10-01 00:00 Asia/Ho_Chi_Minh. Stored event timestamps are UTC.
+## Key Findings
 
-Five raw sources: agents, SLA policies, tickets, ticket work logs and daily workforce. Intentional duplicates and field defects demonstrate the quality workflow. Cleaning retains 14,774 ticket snapshots; exclusions are reconciled in [cleaning_report.md](docs/cleaning_report.md).
+- **Technical cases deserve the first service review.** Technical Support represents **29.49% of tickets but 50.09% of resolution SLA breaches**: 1,760 of 3,514. Review technical queues, escalation transfers and dependencies before increasing staffing across all teams.
+- **Resolution is the weaker service stage.** First-response compliance is **87.93%**, compared with **76.19%** for resolution and **67.66%** overall. Track both stages; each excludes its own pending cases.
+- **Demand is uneven.** Average weekday arrivals are **1.92 times** weekend arrivals; **35.70%** of tickets arrive between 09:00 and 11:59 local time. Review morning triage coverage, then check when handling actually occurs.
+- **The mean hides long waits.** Completed-ticket resolution averages **117.05 hours**, versus a **6.22-hour median** and **48.75-hour P95**. Report typical and tail durations together; elapsed resolution includes waiting.
+- **Reopened tickets have lower respondent CSAT.** Scores average **3.74/5**, compared with **4.10/5** for tickets with no recorded reopen. Review repeated-resolution cases; case mix and survey nonresponse limit interpretation.
+- **Backlog needs an aging review.** Of **578** unresolved tickets at the snapshot, **552** are older than 48 hours and **561** have breached resolution SLA. Confirm next actions and dependency owners for aged cases.
 
-## Tech stack and data model
+These are observations from synthetic data, with no causal claims. [Eight findings](docs/05_business_insights.md) include evidence, recommendations and limitations.
 
-Python 3.12+, pandas 3.x, NumPy 2.x, MySQL 8.0.16+ SQL, and a Power BI semantic-model/DAX specification. The relational model has four dimensions (date, agents, categories, policies) and three facts (tickets, work logs, daily workforce). Categories and dates are derived; no additional raw source is introduced.
+## Data Quality Decisions
 
-## Data quality approach
+| Data issue | Decision | Reason |
+|---|---|---|
+| Exact duplicates | Remove 75 ticket copies and 36 log copies | Repeated observations inflate volume and effort |
+| Channel formatting | Normalize 120 ticket rows | Whitespace and case do not change the channel |
+| Conflicting ticket ID | Quarantine 60 versions across 30 IDs | The source cannot identify a reliable winner |
+| Invalid CSAT | Set 23 scores to null | Preserve the ticket without inventing satisfaction |
+| Invalid lifecycle | Quarantine affected tickets | Service timing needs valid ordered events |
+| Unknown agent reference | Quarantine affected records | Ownership and capacity need valid relationships |
+| Extreme resolution duration | Keep logically valid records | Unusual waiting time alone is not a data error |
 
-Separate fully identical copies from conflicting keys; normalize only evidence-backed values; quarantine ambiguous identities and logical errors; preserve legitimate extreme durations. Assessment and cleaning verify immutable raw SHA256. [Quality findings](docs/data_quality_report.md), [decisions](docs/cleaning_decisions.md) and [lineage](docs/data_lineage.md) show the audit trail.
+Every source row reconciles to a retained record, redundant copy or quarantine entry. [Cleaning decisions](docs/03_cleaning_decisions.md) explain the rules and impact.
 
-## SQL analysis
+## Data Model
 
-[Business queries](database/analysis.sql) cover demand, mix, SLA components, satisfaction, reopens, backlog, case mix and handling/capacity. They use joins, CTEs, conditional aggregation, ranks, LAG and calendar rolling averages. **SQL has not been executed against MySQL in this environment.** [Execution guide](docs/sql_analysis_guide.md) supplies exact import and reconciliation steps. Findings below use executed Python evidence.
+`fact_tickets` stores one ticket snapshot; `fact_work_logs` stores one ticket/handler/local-date entry; `fact_workforce_daily` stores one agent/local date. Date, agent, category and SLA-policy dimensions support consistent comparisons. Final ticket ownership can differ from the actual handler, so service outcomes and effort are aggregated separately to avoid duplicated totals.
 
-## Dashboard
+## SQL Analysis
 
-[Model](powerbi/data_model.md), [DAX measures](powerbi/measures.dax), import-ready analytical CSVs and an [exact three-page specification](powerbi/dashboard_spec.md) are included: Executive Overview, Operations Analysis, Agent & Team Performance. The actual PBIX and screenshots remain manual work; DAX has not been executed in Desktop.
+The [SQL files](sql/README.md) answer:
 
-## Key findings
+- Which categories contribute disproportionately to resolution breaches?
+- When does ticket demand peak?
+- How do resolution duration and reopen behavior relate to CSAT?
+- Where is aged backlog concentrated?
+- Which teams carry the greatest workload relative to capacity?
+- How do owner outcomes differ after considering case mix and sample size?
 
-| Verified metric | Result |
-|---|---:|
-| Retained tickets | 14,774 |
-| First-response SLA compliance | 87.93% |
-| Resolution SLA compliance | 76.19% |
-| Overall SLA compliance | 67.66% |
-| CSAT / valid completed-ticket response rate | 4.07/5 / 52.35% |
-| Reopen Rate | 8.35% |
-| Snapshot backlog | 578 |
-| Handling / productive utilization | 68.74% |
+CTEs, windows, LAG, ranking and conditional aggregation support these questions. **MySQL execution is still pending**; published findings use executed Python calculations.
 
-Technical Support contributes 50.09% of resolution breaches from 29.49% of tickets. Mean resolution is 117.05 hours versus a 6.22-hour median, supporting a separate review of long waits. See [eight evidence-led findings](docs/insights.md) for actions and limitations.
+## Power BI
 
-## Workforce planning
+Three pages are specified: **Executive Overview** for service risks, **Operations Analysis** for demand and queues, and **Agent & Team Performance** for ownership, effort and capacity. The semantic model, DAX measures and dashboard specification are ready for implementation in Power BI Desktop. **No PBIX or screenshots have been created; DAX has not been executed.**
 
-[Daily estimates](data/analytics/staffing_daily.csv) use the previous four matching weekdays of handling effort, 374.4 productive minutes per planned FTE and an 85% utilization target. Positive gaps are planning signals; daily data cannot support exact hourly staffing gaps. [Methodology](docs/workforce_methodology.md) explains history requirements and assumptions.
+## Workforce Planning
 
-## Repository structure
+Daily work logs measure workload; scheduled minutes minus absence and shrinkage measure productive capacity. Required FTE uses the previous four matching weekdays of handling, **374.4 productive minutes per FTE** and an **85% target utilization**. Staffing gap is required minus available equivalent FTE. Aggregate observed utilization is **68.74%**, but daily estimates can expose pressure hidden by that average. This is a planning estimate, not exact workforce scheduling or an hourly staffing gap.
 
-- data/: immutable raw, processed, quarantine and analytical outputs
-- src/: generation, assessment, cleaning, validation, metrics and daily workforce analysis
-- database/: MySQL schema, import, validation, views and business queries
-- powerbi/: semantic model, measures and report specification
-- docs/: requirements, dictionary, lineage, reports, methodology and findings
-- tests/: focused generation, quality, lifecycle, SLA, relationship and KPI checks
+## Tools
+
+Python · pandas · NumPy · MySQL / SQL · Power BI / DAX
+
+## Repository Guide
+
+Start with [business context](docs/01_business_context.md), then [data quality](docs/02_data_quality.md), [cleaning decisions](docs/03_cleaning_decisions.md), [data model](docs/04_data_model.md), [SQL](sql/README.md), [Power BI](powerbi/dashboard_spec.md) and [insights](docs/05_business_insights.md). [Lineage](docs/data_lineage.md) links these steps to their source and output files.
 
 ## Reproduce
 
-Use Python 3.12+ and compatible installed packages, or install requirements in a project virtual environment. From the repository root:
+From the repository root, use Python 3.12+ in a virtual environment:
 
 ```text
 python -m pip install -r requirements.txt
-python src/generate_dataset.py
-python src/validate_generation.py
-python src/assess_data_quality.py
-python src/clean_data.py
-python src/validate_clean_data.py
-python src/verified_metrics.py
-python src/staffing_analysis.py
-python src/build_portfolio.py
-python -m unittest discover -s tests -v
+python src/run_pipeline.py
 ```
 
-Existing validated raw files are reused. To simulate from scratch, use a new working copy with no raw CSVs; never overwrite a validated source snapshot. Analytical metadata records the parameters, checksums and actual runtime. Reproducibility depends on those recorded package versions.
-
-SLA compliance excludes PENDING; Reopen Rate is not FCR; resolution time is not handling time; backlog is a fixed snapshot; correlations do not establish causes.
+This assesses, cleans, validates, refreshes analytical outputs and runs tests against the included raw snapshot, preserving this README. The [SQL guide](docs/sql_analysis_guide.md) covers imports and reconciliation. Synthetic operational source tools in `tools/` provide reproducibility; validated raw files remain unchanged.

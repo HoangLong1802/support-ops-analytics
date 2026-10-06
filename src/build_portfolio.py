@@ -1,4 +1,4 @@
-﻿"""Export BI-ready analytical tables and write findings from executed metrics."""
+"""Export BI tables and measured insights while preserving editorial documentation."""
 import json
 import numpy as np
 import pandas as pd
@@ -42,6 +42,9 @@ def main():
     agent=w.groupby(["agent_id","team"])[["handling_minutes","productive_minutes"]].sum()
     agent["utilization"]=agent.handling_minutes/agent.productive_minutes.replace(0,np.nan)
     low,high=agent.utilization.min(),agent.utilization.max()
+    reopened=t.reopen_count.gt(0)
+    reopened_csat=t.loc[reopened,"csat_score"]
+    other_csat=t.loc[~reopened,"csat_score"]
     findings=[
         ("Technical cases contribute disproportionate resolution breaches",
          f"Technical Support is {tech_share:.2%} of retained tickets and {tech_breach:.2%} of resolution SLA breaches ({int((tech & breach).sum()):,} of {int(breach.sum()):,}).",
@@ -73,11 +76,11 @@ def main():
          "Aged unresolved cases require review distinct from the routine arrival queue.",
          "Create an aging review list by category and final owner, confirm dependencies and next actions, and track future snapshots prospectively.",
          "A single snapshot cannot show historical backlog growth or establish whether long waits are avoidable."),
-        ("Reopened cases form a measurable review cohort",
-         f"{k['reopened_tickets']:,} tickets reopened, a {k['reopen_rate']:.2%} share of the retained ticket cohort.",
-         "Reopened cases indicate repeated lifecycle activity and a useful sample for rework review.",
+        ("Reopened tickets have lower respondent satisfaction",
+         f"{k['reopened_tickets']:,} tickets reopened ({k['reopen_rate']:.2%} of retained tickets). Respondent CSAT averages {reopened_csat.mean():.2f}/5 from {reopened_csat.count():,} responses, compared with {other_csat.mean():.2f}/5 from {other_csat.count():,} responses for tickets with no recorded reopen.",
+         "The reopened cohort is a useful starting sample for reviewing repeated effort and customer communication.",
          "Review integration/bug and repeated-reopen examples with documented context; compare category and priority cohorts before revising knowledge articles.",
-         "Reopen Rate is not FCR; the dataset does not contain enough contact history to calculate FCR."),
+         "Category, severity and survey nonresponse may explain the difference. Reopen Rate is not FCR; contact history is unavailable."),
         ("Daily capacity pressure differs from overall utilization",
          f"Aggregate handling/productive utilization is {k['utilization']:.2%}; full-year agent ratios range from {low:.2%} to {high:.2%}. Four-weekday planning estimates show positive gaps on {positive:,} of {int(available.sum()):,} eligible team-days; maximum estimated gap is {maximum_gap:.2f} equivalent FTE.",
          "Annual averages can conceal daily pressure and assignment differences.",
@@ -85,100 +88,16 @@ def main():
          "FTE gaps are retrospective estimates, not hiring requirements or exact shifts; hire dates, case mix and quarantine change comparisons."),
     ]
     lines=["# Business insights","","Evidence comes from executed Python calculations on retained processed data. All data is synthetic; these findings demonstrate analytical decisions rather than real company results. Rates use the denominators in verified_kpis.csv.",""]
-    for title,evidence,interpretation,recommendation,limitation in findings:
-        lines += [f"## {title}","",f"**Finding and evidence:** {evidence}","",f"**Business interpretation:** {interpretation}","",f"**Recommendation:** {recommendation}","",f"**Limitation:** {limitation}",""]
-    (ROOT/"docs/insights.md").write_text("\n".join(lines),encoding="utf-8")
-    README=f"""# Customer Support Operations Analytics
-
-A synthetic Data Analyst portfolio project connecting operational data quality to service, customer experience and daily capacity decisions.
-
-## Business problem
-
-Support leaders need to understand demand, SLA risks, snapshot backlog and workload differences before adjusting operations. The analysis uses ticket ownership, actual handling effort and workforce capacity separately, with explicit limits on inference.
-
-## Analytical workflow
-
-Business questions → raw data → independent quality assessment → cleaning decisions → processed data → SQL → Power BI → verified insights and recommendations.
-
-## Dataset
-
-**All data is synthetic.** There are 15,000 logical tickets before defects, 18 agents in three teams and 365 local operational dates. Coverage is 2025-10-01 through 2026-09-30; snapshot is 2026-10-01 00:00 Asia/Ho_Chi_Minh. Stored event timestamps are UTC.
-
-Five raw sources: agents, SLA policies, tickets, ticket work logs and daily workforce. Intentional duplicates and field defects demonstrate the quality workflow. Cleaning retains {k['total_tickets']:,} ticket snapshots; exclusions are reconciled in [cleaning_report.md](docs/cleaning_report.md).
-
-## Tech stack and data model
-
-Python 3.12+, pandas 3.x, NumPy 2.x, MySQL 8.0.16+ SQL, and a Power BI semantic-model/DAX specification. The relational model has four dimensions (date, agents, categories, policies) and three facts (tickets, work logs, daily workforce). Categories and dates are derived; no additional raw source is introduced.
-
-## Data quality approach
-
-Separate fully identical copies from conflicting keys; normalize only evidence-backed values; quarantine ambiguous identities and logical errors; preserve legitimate extreme durations. Assessment and cleaning verify immutable raw SHA256. [Quality findings](docs/data_quality_report.md), [decisions](docs/cleaning_decisions.md) and [lineage](docs/data_lineage.md) show the audit trail.
-
-## SQL analysis
-
-[Business queries](database/analysis.sql) cover demand, mix, SLA components, satisfaction, reopens, backlog, case mix and handling/capacity. They use joins, CTEs, conditional aggregation, ranks, LAG and calendar rolling averages. **SQL has not been executed against MySQL in this environment.** [Execution guide](docs/sql_analysis_guide.md) supplies exact import and reconciliation steps. Findings below use executed Python evidence.
-
-## Dashboard
-
-[Model](powerbi/data_model.md), [DAX measures](powerbi/measures.dax), import-ready analytical CSVs and an [exact three-page specification](powerbi/dashboard_spec.md) are included: Executive Overview, Operations Analysis, Agent & Team Performance. The actual PBIX and screenshots remain manual work; DAX has not been executed in Desktop.
-
-## Key findings
-
-| Verified metric | Result |
-|---|---:|
-| Retained tickets | {k['total_tickets']:,} |
-| First-response SLA compliance | {k['fr_sla_compliance']:.2%} |
-| Resolution SLA compliance | {k['resolution_sla_compliance']:.2%} |
-| Overall SLA compliance | {k['overall_sla_compliance']:.2%} |
-| CSAT / valid completed-ticket response rate | {k['average_csat']:.2f}/5 / {k['csat_response_rate']:.2%} |
-| Reopen Rate | {k['reopen_rate']:.2%} |
-| Snapshot backlog | {k['backlog']:,} |
-| Handling / productive utilization | {k['utilization']:.2%} |
-
-Technical Support contributes {tech_breach:.2%} of resolution breaches from {tech_share:.2%} of tickets. Mean resolution is {k['average_resolution_hours']:.2f} hours versus a {k['median_resolution_hours']:.2f}-hour median, supporting a separate review of long waits. See [eight evidence-led findings](docs/insights.md) for actions and limitations.
-
-## Workforce planning
-
-[Daily estimates](data/analytics/staffing_daily.csv) use the previous four matching weekdays of handling effort, 374.4 productive minutes per planned FTE and an 85% utilization target. Positive gaps are planning signals; daily data cannot support exact hourly staffing gaps. [Methodology](docs/workforce_methodology.md) explains history requirements and assumptions.
-
-## Repository structure
-
-- data/: immutable raw, processed, quarantine and analytical outputs
-- src/: generation, assessment, cleaning, validation, metrics and daily workforce analysis
-- database/: MySQL schema, import, validation, views and business queries
-- powerbi/: semantic model, measures and report specification
-- docs/: requirements, dictionary, lineage, reports, methodology and findings
-- tests/: focused generation, quality, lifecycle, SLA, relationship and KPI checks
-
-## Reproduce
-
-Use Python 3.12+ and compatible installed packages, or install requirements in a project virtual environment. From the repository root:
-
-```text
-python -m pip install -r requirements.txt
-python src/generate_dataset.py
-python src/validate_generation.py
-python src/assess_data_quality.py
-python src/clean_data.py
-python src/validate_clean_data.py
-python src/verified_metrics.py
-python src/staffing_analysis.py
-python src/build_portfolio.py
-python -m unittest discover -s tests -v
-```
-
-Existing validated raw files are reused. To simulate from scratch, use a new working copy with no raw CSVs; never overwrite a validated source snapshot. Analytical metadata records the parameters, checksums and actual runtime. Reproducibility depends on those recorded package versions.
-
-SLA compliance excludes PENDING; Reopen Rate is not FCR; resolution time is not handling time; backlog is a fixed snapshot; correlations do not establish causes.
-"""
-    (ROOT/"README.md").write_text(README,encoding="utf-8")
+    for number,(title,evidence,interpretation,recommendation,limitation) in enumerate(findings, start=1):
+        lines += [f"### Finding {number}","",title+".","","**Evidence**","",evidence,"","**Interpretation**","",interpretation,"","**Recommendation**","",recommendation,"","**Limitation**","",limitation,""]
+    (ROOT/"docs/05_business_insights.md").write_text("\n".join(lines),encoding="utf-8",newline="\n")
     (ROOT/"docs/execution_report.md").write_text(
         "# Execution report\n\n"
         "Pristine generation, sanity calibration and deterministic repetition passed before raw publication. Independent assessment, processed validation and row reconciliation ran successfully; raw SHA256 remained unchanged. KPI and analytical CSV outputs were generated from processed data. See the generation, quality and cleaning reports for executed evidence and counts.\n\n"
         "MySQL: scripts ready only; no client or local service was available. Power BI: import-ready data, semantic model, DAX source and three-page specification; no PBIX, DAX execution or rendered screenshot validation. These native-tool limitations do not imply successful SQL or Power BI execution.\n",
         encoding="utf-8")
     assert before==hashes(),"Portfolio build altered raw files"
-    print("BI tables, eight verified insights and README generated; KPI agreement and raw hashes: PASS")
+    print("BI tables and eight verified insights refreshed; editorial README preserved; KPI agreement and raw hashes: PASS")
 
 if __name__=="__main__":
     main()

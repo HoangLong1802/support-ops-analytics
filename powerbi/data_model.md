@@ -1,4 +1,4 @@
-﻿# Power BI semantic model
+# Power BI semantic model
 
 Implementation status: import-ready CSVs, measure definitions and the dashboard specification are supplied. A PBIX has not been built or validated in Power BI Desktop.
 
@@ -34,6 +34,8 @@ Agent filters mean **final owner** for ticket outcomes and **actual handler** fo
 Mark dim_date as the date table using date_key; disable automatic date/time. Sort weekday_name by weekday_number and use month_start for monthly trend axes. The calendar contains all 365 coverage dates, including zero-arrival days. Previous-month measures require contiguous date selections. Rolling means include zero days and disclose partial windows during the first six days.
 
 Paste measures individually from measures.dax; set rates to Percentage and durations to explicit minute/hour formats. BLANK at zero denominators is intentional. Compliance denominators are MET + BREACHED; CSAT response denominator is completed tickets; reopen denominator is the retained ticket cohort.
+
+Average Daily Tickets uses the selected calendar-day count, including zero-arrival days. Category contribution measures remove category filters for the denominator while retaining date/channel/priority scope. Median and P95 resolution measures use observed completion durations; P95 uses the inclusive linear estimator matching the Python export. All these measures still require validation in Desktop.
 
 Acceptance in Desktop: with all filters cleared, compare the cards and each SLA outcome count against verified_kpis.csv. Check category, priority, date and agent filtering; confirm the capacity visuals retain their stated scope. Validate zero-capacity BLANK and pending exclusions. DAX execution and rendered report verification remain manual.
 
