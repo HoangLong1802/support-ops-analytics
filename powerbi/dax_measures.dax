@@ -1,0 +1,3 @@
+﻿// Compatibility note: canonical definitions are in powerbi/measures.dax.
+// Import individual measures from that file; this file intentionally has no stale definitions.
+

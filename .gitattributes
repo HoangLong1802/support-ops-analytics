@@ -1,0 +1,2 @@
+# Preserve reproducible CSV bytes across platforms and Git checkouts.
+*.csv -text

@@ -1,0 +1,105 @@
+{
+  "runtime": {
+    "python": "3.12.13",
+    "pandas": "3.0.6",
+    "numpy": "2.5.3"
+  },
+  "parameters": {
+    "response_scale": 1.0,
+    "response_sigma": 0.85,
+    "resolution_scale": 1.12,
+    "handling_scale": 1.0,
+    "csat_center": 4.3
+  },
+  "history": [
+    {
+      "attempt": 1,
+      "parameters": {
+        "response_scale": 1.0,
+        "response_sigma": 0.85,
+        "resolution_scale": 1.12,
+        "handling_scale": 1.0,
+        "csat_center": 4.3
+      },
+      "metrics": {
+        "fr_breach_rate": 0.1214747649843323,
+        "resolution_breach_rate": 0.23853700860975774,
+        "overall_breach_rate": 0.3240790176187934,
+        "reopen_rate": 0.08386666666666667,
+        "csat_response_rate": 0.5251543959475401,
+        "average_csat": 4.07095665961945,
+        "backlog_rate": 0.039266666666666665,
+        "weekday_weekend_ratio": 1.927217973373884,
+        "median_team_day_utilization": 0.6935416571967263
+      },
+      "failed": {}
+    }
+  ],
+  "pristine_metrics": {
+    "total_tickets": 15000,
+    "completed_tickets": 14411,
+    "open_tickets": 289,
+    "pending_tickets": 300,
+    "average_first_response_minutes": 54.9227948529902,
+    "average_resolution_hours": 116.81929718039461,
+    "median_resolution_hours": 6.216666666666667,
+    "p90_resolution_hours": 29.75,
+    "p95_resolution_hours": 48.55833333333333,
+    "average_csat": 4.07095665961945,
+    "csat_responses": 7568,
+    "csat_response_rate": 0.5251543959475401,
+    "reopened_tickets": 1258,
+    "reopen_rate": 0.08386666666666667,
+    "backlog": 589,
+    "backlog_rate": 0.039266666666666665,
+    "weekday_weekend_ratio": 1.927217973373884,
+    "handling_hours": 20564.9,
+    "productive_capacity_hours": 29417.25,
+    "utilization": 0.6990762222845439,
+    "median_team_day_utilization": 0.6935416571967263,
+    "fr_sla_met": 13177,
+    "fr_sla_breached": 1822,
+    "fr_sla_pending": 1,
+    "fr_sla_eligible": 14999,
+    "fr_sla_compliance": 0.8785252350156677,
+    "fr_breach_rate": 0.1214747649843323,
+    "resolution_sla_met": 11409,
+    "resolution_sla_breached": 3574,
+    "resolution_sla_pending": 17,
+    "resolution_sla_eligible": 14983,
+    "resolution_sla_compliance": 0.7614629913902423,
+    "resolution_breach_rate": 0.23853700860975774,
+    "overall_sla_met": 10128,
+    "overall_sla_breached": 4856,
+    "overall_sla_pending": 16,
+    "overall_sla_eligible": 14984,
+    "overall_sla_compliance": 0.6759209823812066,
+    "overall_breach_rate": 0.3240790176187934,
+    "backlog_over_24_hours": 570,
+    "backlog_over_48_hours": 563,
+    "backlog_over_72_hours": 560
+  },
+  "defects": {
+    "exact_ticket_copies": 75,
+    "conflicting_ticket_ids": 30,
+    "missing_hierarchy": 120,
+    "invalid_pairs": 60,
+    "channel_format": 120,
+    "invalid_csat": 23,
+    "missing_completed_resolution": 38,
+    "response_before_creation": 23,
+    "unknown_owner": 15,
+    "exact_log_copies": 36,
+    "invalid_logs": 27,
+    "invalid_workforce_rows": 9
+  },
+  "hashes": {
+    "agents": "42a9c17ee4a3a69a9fa7869a9cb6fe529a35e512847830714a7cd582b27ff89d",
+    "sla_policies": "54dcbf5887fe5237776eb5465407349983dc622ad122c2cbc2792272721acde8",
+    "tickets": "8fe7a644d3d21e18fc8df4be6d381640af2fce11cf13412215d5dc9dc2a025a6",
+    "ticket_work_logs": "1f427ed46af6f95ddd060c2d4a4721c1ddb8040a31a2588dc70c0f6d00c57efa",
+    "workforce_daily": "40a666c87c3083c1544fdaed881ecaddd2766d1c6eb8240c8f2ba78fb1a483ac"
+  },
+  "reproducibility": "PASS",
+  "pristine_validation": "PASS"
+}

@@ -1,0 +1,17 @@
+policy_id,channel,priority,first_response_target_minutes,resolution_target_minutes
+POLEMAILLOW,email,low,480,2880
+POLEMAILMEDIUM,email,medium,240,1440
+POLEMAILHIGH,email,high,60,480
+POLEMAILURGENT,email,urgent,30,240
+POLCHATLOW,chat,low,30,2880
+POLCHATMEDIUM,chat,medium,20,1440
+POLCHATHIGH,chat,high,10,480
+POLCHATURGENT,chat,urgent,5,240
+POLPHONELOW,phone,low,15,2880
+POLPHONEMEDIUM,phone,medium,10,1440
+POLPHONEHIGH,phone,high,5,480
+POLPHONEURGENT,phone,urgent,2,240
+POLWEBLOW,web,low,720,2880
+POLWEBMEDIUM,web,medium,360,1440
+POLWEBHIGH,web,high,120,480
+POLWEBURGENT,web,urgent,60,240

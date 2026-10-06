@@ -1,0 +1,12 @@
+# Internal workflow and recovery artifacts
+.agent/
+STATE.md
+AGENTS.md
+**/AGENTS.md
+_backups/
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+*.log
+BACKUP_CHECKPOINTS.zip
