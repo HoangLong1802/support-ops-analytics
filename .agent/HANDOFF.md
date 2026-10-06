@@ -4,10 +4,10 @@
 Python analysis, Markdown portfolio and real Excel output are validated. GitHub is the primary cross-machine recovery source. All synthetic data is committed; raw generation is already complete and frozen.
 
 ## Last Completed Work
-Delivered the 14-sheet, 4-chart Excel workbook and processed-source Power BI queries/model/measures/three-page specification. Continuity files and historical evidence are being added to Git under the revised ignore policy.
+Delivered the 14-sheet, 4-chart Excel workbook and processed-source BI specification. Versioned continuity files and historical evidence, pushed the checkpoint, then validated a fresh GitHub clone with Windows core.autocrlf=true.
 
 ## Latest Validation
-23 unit tests passed; all 42 Excel KPIs matched Python and saved exports. All 23 data artifact SHA256 values matched the pre-output baseline. Evidence: test_results.json, output_validation.json and output_baseline.json in this folder. Runtime: Python 3.12.13, pandas 3.0.6, NumPy 2.5.3, openpyxl 3.1.5. Native M/DAX/MySQL execution remains pending.
+23 unit tests passed from a fresh GitHub clone; all 42 Excel KPIs matched Python and saved exports. All 23 data artifact SHA256 values matched the pre-output baseline; the clone stayed clean. Evidence: continuity_validation.json, test_results.json, output_validation.json and output_baseline.json. Runtime: Python 3.12.13, pandas 3.0.6, NumPy 2.5.3, openpyxl 3.1.5. Native M/DAX/MySQL execution remains pending.
 
 ## Key KPI Results
 14,774 tickets; 14,196 completed; 578 backlog. First-response SLA 87.93%, resolution SLA 76.19%, overall SLA 67.66% (each excludes its own pending cases). CSAT 4.07/5 from 7,431 responses; Reopen Rate 8.35%; productive utilization 68.74%. Resolution mean 117.05 hours, median 6.22 hours, P95 48.75 hours. Reopen Rate is not FCR; elapsed resolution is not handling effort.
@@ -23,9 +23,9 @@ Repository: https://github.com/HoangLong1802/support-ops-analytics.git
 
 Current branch: main
 
-Latest commit at handoff preparation: 58f77c2b57b6ebc6aecf0f401e800d6442bf890f - feat: add verified Excel analytical output
+Latest commit at handoff update: be72f2982869a328483a6fa505a9f527d0ee0bd5 - checkpoint: preserve cross-machine project continuity
 
-Push status: PUSHED (that checkpoint was remotely verified).
+Push status: PUSHED (all 118 remote blob hashes verified for that checkpoint).
 
 This record describes the last verified push when written. Use git log -1 --oneline and git status -sb for the current checkout, including the commit that saves this handoff. Do not treat historical publication JSON as live Git status.
 
