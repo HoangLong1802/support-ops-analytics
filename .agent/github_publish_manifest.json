@@ -1,0 +1,476 @@
+{
+  "repository": "HoangLong1802/support-ops-analytics",
+  "tests": {
+    "tests_run": 23,
+    "failures": 0,
+    "errors": 0,
+    "focused_output_tests": 9,
+    "command": "python -m unittest discover -s tests -v",
+    "excel_validation": "PASS",
+    "native_dax_execution": false
+  },
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 82,
+      "sha": "cddaab30adba386bab497b739f9dadd2732c1996",
+      "sha256": "c6748e1f0386024fb35c32a47b9e641fa933728ccc8c59aa5a71674ebcb235ec"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 184,
+      "sha": "cc3f63a891538854bba6080ca5d20806338e4147",
+      "sha256": "1224f8c6c299d6689f4c585cac1cb96a2c3df873c3c0a919884b9c21193c2896"
+    },
+    {
+      "path": "data/analytics/agent_daily_workload.csv",
+      "bytes": 439670,
+      "sha": "d19193eb83ad7d51286c44439770e9c299419284",
+      "sha256": "d1db9e348fc064e4a29eb162f67a9616e3fb4025a376b58aed6f15023b8d2fbc"
+    },
+    {
+      "path": "data/analytics/cleaning_audit.json",
+      "bytes": 1268,
+      "sha": "80a636b8d27e8143d81d3b899a3c7c5d6419cb91",
+      "sha256": "ba8771c5b24349ba3ffa6032fb8540795200bab5ef61c42afdfd4f7a3aa1a90f"
+    },
+    {
+      "path": "data/analytics/dim_categories.csv",
+      "bytes": 1065,
+      "sha": "76e91bdad0585ff648f9f119cd32581c9fe9d62b",
+      "sha256": "a20fef48c516b16208228a1eb1be3a5e42de480d47d301f623b790db90503a42"
+    },
+    {
+      "path": "data/analytics/dim_date.csv",
+      "bytes": 16922,
+      "sha": "97a20bb1e6aaa1159745c2ce1029c74e1efb7502",
+      "sha256": "d9d9916e84845eeee07d63e5060b4ccf2761eeee31dac5cc74f8231419e6c84e"
+    },
+    {
+      "path": "data/analytics/generation_metadata.json",
+      "bytes": 3586,
+      "sha": "3b6cda2f405ed2e23540ddeec594867f073cd484",
+      "sha256": "6f4076fe186c83cbc4cdeaff6805bc0d2a315886c4603090a979f7933029c6a4"
+    },
+    {
+      "path": "data/analytics/quality_audit.json",
+      "bytes": 6341,
+      "sha": "2ed667ccc834076678ddcb2b7dec22597a63de9e",
+      "sha256": "397856fe0933ace4b8778e50e8085619dd3ada05623c6df62d34b523e03c7af1"
+    },
+    {
+      "path": "data/analytics/staffing_daily.csv",
+      "bytes": 140611,
+      "sha": "423197a68a2b6208db562a1300e780f9fb5d6adf",
+      "sha256": "8da882bf7452db1cac507582f37df00a5eb16bb2b8ceea51715996f3803e797a"
+    },
+    {
+      "path": "data/analytics/ticket_service_metrics.csv",
+      "bytes": 3693436,
+      "sha": "f973160511830664eb7fc68937359c22cc465013",
+      "sha256": "303040331954bcb9f47f3d9f7a0cdb90d8cf9337eeaa8ee397ef1c21989ad7aa"
+    },
+    {
+      "path": "data/analytics/verified_kpis.csv",
+      "bytes": 2779,
+      "sha": "504c90791fde1bd0f65b0f193cd9702edd87b469",
+      "sha256": "2b5911a887ece94c42464d00c2c4d5c999d9dc77f3122eae56f81f39fcba5e83"
+    },
+    {
+      "path": "data/processed/agents_clean.csv",
+      "bytes": 648,
+      "sha": "c30ba0b85c104a57eead8cd89dcd4f6d1cb3fef4",
+      "sha256": "42a9c17ee4a3a69a9fa7869a9cb6fe529a35e512847830714a7cd582b27ff89d"
+    },
+    {
+      "path": "data/processed/sla_policies_clean.csv",
+      "bytes": 589,
+      "sha": "94b3bbff47535e2ae57c91c86c03a3b1ec003cb9",
+      "sha256": "54dcbf5887fe5237776eb5465407349983dc622ad122c2cbc2792272721acde8"
+    },
+    {
+      "path": "data/processed/ticket_work_logs_clean.csv",
+      "bytes": 737128,
+      "sha": "8b43f45dff3d2f9b9f7eb60a9fc840173ae2358a",
+      "sha256": "fc0a63408450ce9fe2cc5e351486944b5f3f08a815e7e17678e88070d7df9058"
+    },
+    {
+      "path": "data/processed/tickets_clean.csv",
+      "bytes": 2270725,
+      "sha": "0c01d20046aff2968cb614f6f1bfbd8290276392",
+      "sha256": "d03b412587b24bc22c2fa612a2d4dfc5821c044008157432adbd6a3f0a313726"
+    },
+    {
+      "path": "data/processed/workforce_daily_clean.csv",
+      "bytes": 169208,
+      "sha": "21bb3d0a0f59499755f6e87c1ced9d4fbfec09d6",
+      "sha256": "e60aeb1d11e076455417618b3ea7f80db1886ac43f3446982a8f99b302cea426"
+    },
+    {
+      "path": "data/quarantine/all_quarantine_records.csv",
+      "bytes": 84978,
+      "sha": "8d29b11d4f7359565a64f667be43cdea3977c0a3",
+      "sha256": "0dbc32100cc1379b24067423ef10ce2e81e3f97a3c63d44aba3350b86315639e"
+    },
+    {
+      "path": "data/quarantine/ticket_work_logs_quarantine.csv",
+      "bytes": 21684,
+      "sha": "6838bbaaa5ab8a3516f1915fbb629b1dd2378f83",
+      "sha256": "c28db70173546636c34ea6668fe028184f171d4ea169599230ca909b7aeb6d0b"
+    },
+    {
+      "path": "data/quarantine/tickets_quarantine.csv",
+      "bytes": 43704,
+      "sha": "b753cce8cac2eb47598f6f2581bd3fc5d1006d8d",
+      "sha256": "41be571de2d9cf6a933ea1d38150fb93f77b19d0368cd07950489da7fc79042f"
+    },
+    {
+      "path": "data/quarantine/workforce_daily_quarantine.csv",
+      "bytes": 547,
+      "sha": "9a06d4a7d761b85476d81ba285b2ac1f8e514e99",
+      "sha256": "63ceb50d9697d42fcb606a8605ef7230aea50535c0c3c67c737aad8f45b2a366"
+    },
+    {
+      "path": "data/raw/agents.csv",
+      "bytes": 648,
+      "sha": "c30ba0b85c104a57eead8cd89dcd4f6d1cb3fef4",
+      "sha256": "42a9c17ee4a3a69a9fa7869a9cb6fe529a35e512847830714a7cd582b27ff89d"
+    },
+    {
+      "path": "data/raw/sla_policies.csv",
+      "bytes": 589,
+      "sha": "94b3bbff47535e2ae57c91c86c03a3b1ec003cb9",
+      "sha256": "54dcbf5887fe5237776eb5465407349983dc622ad122c2cbc2792272721acde8"
+    },
+    {
+      "path": "data/raw/ticket_work_logs.csv",
+      "bytes": 752675,
+      "sha": "b36a18a0d6995564feadc2cdb0de044ba725efb5",
+      "sha256": "1f427ed46af6f95ddd060c2d4a4721c1ddb8040a31a2588dc70c0f6d00c57efa"
+    },
+    {
+      "path": "data/raw/tickets.csv",
+      "bytes": 2318979,
+      "sha": "d0003bf74133cb6f74936d64b770c23e3d5d1b52",
+      "sha256": "8fe7a644d3d21e18fc8df4be6d381640af2fce11cf13412215d5dc9dc2a025a6"
+    },
+    {
+      "path": "data/raw/workforce_daily.csv",
+      "bytes": 169460,
+      "sha": "aced43e310e2ebab9e38b9e485408f3b03f3e9c4",
+      "sha256": "40a666c87c3083c1544fdaed881ecaddd2766d1c6eb8240c8f2ba78fb1a483ac"
+    },
+    {
+      "path": "database/analysis.sql",
+      "bytes": 195,
+      "sha": "80a854a0b00f8899703fa6d5573e7d64524f9fac",
+      "sha256": "f3700f23e0ee23984f74342aa7645f04d818a0a10ed55a87a5ce0baade7d6255"
+    },
+    {
+      "path": "database/import.sql",
+      "bytes": 3769,
+      "sha": "0479043ef550fc96e26b2f25cb0deb2aee824012",
+      "sha256": "3486757d5210b8f368df79df52c6b024d296b7552d21c30fabb6b13a6d8be234"
+    },
+    {
+      "path": "database/schema.sql",
+      "bytes": 81,
+      "sha": "c352052eda37f5b154afb3bdb66899c1f51814b8",
+      "sha256": "06b9bfe66731d37055276a0b7f562e484a844430b403d32cf47adf0dde20cefa"
+    },
+    {
+      "path": "database/validation.sql",
+      "bytes": 2221,
+      "sha": "c954b02bae770d706f6ccd18466447d1ea9047e4",
+      "sha256": "25a98d03b3455b27088405f238b2566a59e61f7f48f6a5243cca8dd41a20f9fb"
+    },
+    {
+      "path": "database/views.sql",
+      "bytes": 104,
+      "sha": "78310b35900c0763a2f5553d4b3c34498af646a9",
+      "sha256": "9fd20b98764fe5c95d9b5b73375c4e2ad049d180489b93e7e0e5e448cfb81075"
+    },
+    {
+      "path": "docs/01_business_context.md",
+      "bytes": 3383,
+      "sha": "67cf21d55149a79d71aeb840574c0ccbadc5b074",
+      "sha256": "ad08bc0d1bb63265bab1e0c66e66c7270a916d8b46c5c653ade7bd17b2c8d8ad"
+    },
+    {
+      "path": "docs/02_data_quality.md",
+      "bytes": 4568,
+      "sha": "56f2a975d4e9699a3d3cbcd3808d8f7e050eba82",
+      "sha256": "e562e19b7598b5bb2d5e22073acec008366f24037bd5b380e84235c344355b70"
+    },
+    {
+      "path": "docs/03_cleaning_decisions.md",
+      "bytes": 4371,
+      "sha": "426da2656d746288af4e36be9809ee975e01740c",
+      "sha256": "d62049201a3b34ed127320d5f72dee61389203add2b62edcb73b6800bc31f7e1"
+    },
+    {
+      "path": "docs/04_data_model.md",
+      "bytes": 3482,
+      "sha": "bab7e94bcf8c4df46fd34872902e0bb5c34ec865",
+      "sha256": "f712272eefc8e86ab9d8f7d7a000d057fc11594f6d5cd7ad87fe66a9956b8859"
+    },
+    {
+      "path": "docs/05_business_insights.md",
+      "bytes": 5362,
+      "sha": "87afc0dddbfc058fae73144e27ed5e6994ff0adc",
+      "sha256": "d9d2b7653b761f0e39f815b9b6439b882309cdecb1d143fac4dd74fd2c951316"
+    },
+    {
+      "path": "docs/business_requirements.md",
+      "bytes": 272,
+      "sha": "4c30ca2d8744a819f1727f575309aa4e2640d4d4",
+      "sha256": "fd57808a9d5f0fd26b22dc27d5483874631b80b2f165e0262b53f14bf71e513f"
+    },
+    {
+      "path": "docs/cleaning_decisions.md",
+      "bytes": 207,
+      "sha": "bb1e86ebb00e21d86ed0c710cc9e3693912b9e44",
+      "sha256": "15ee8ec9086cc211cb72741a21995013547f50525c856eaf659209f7bb4da1c4"
+    },
+    {
+      "path": "docs/cleaning_report.md",
+      "bytes": 1664,
+      "sha": "ca7fbdb75eb40a5e45eb5b6be6d10c4b55df13bf",
+      "sha256": "7a0561c3e480ee447843f0c966ace0c4d27844286808face9e508d7877d92c8d"
+    },
+    {
+      "path": "docs/data_dictionary.md",
+      "bytes": 5302,
+      "sha": "2a1dfca4002a418808d34c1cd4f0f94d56f53ea5",
+      "sha256": "c15b7513271388f58322f36ed733b419f8a3fb3bd4591a50180b47b1e3d78323"
+    },
+    {
+      "path": "docs/data_lineage.md",
+      "bytes": 2943,
+      "sha": "71797481fb880bacd05356fad2ddc93f0315950a",
+      "sha256": "521c4c3b56748ab2b86c14126d96b173aa45434dd041706d839c170152219b91"
+    },
+    {
+      "path": "docs/data_quality_report.md",
+      "bytes": 4817,
+      "sha": "b5315e19feac286c492d9c53409cd1e914fe5e41",
+      "sha256": "d6a767780a3423d6ee6b7dc4606206bd3b39986f5b45b1048b3c3e244e64b700"
+    },
+    {
+      "path": "docs/execution_report.md",
+      "bytes": 687,
+      "sha": "efa869d06d47305082ddb89bee44caf4e9261d31",
+      "sha256": "2d1fadfd25405469100bf70811346693ef8a586faec588b02b1be2d205377800"
+    },
+    {
+      "path": "docs/generation_report.md",
+      "bytes": 3770,
+      "sha": "b93738ec19c3c28989b527e667c94b2cc5325218",
+      "sha256": "199484d8e5be148760a5c7cffb0b00f83de75eddf33353f9e6f4a9134e0a4a32"
+    },
+    {
+      "path": "docs/insights.md",
+      "bytes": 266,
+      "sha": "d56806dc808c471c339c0f1c179b4aa6ed020a0d",
+      "sha256": "e7c6ae0e9903834f63863aac8469e1789899203248fc6cb66e58d39800d1240d"
+    },
+    {
+      "path": "docs/kpi_definitions.md",
+      "bytes": 3618,
+      "sha": "04766842295d8366bd2cec649f71d2e005d40072",
+      "sha256": "85e141a6122e6f249bf6eed877413da54f5b45a06aba74a1ed87663a0f06b4de"
+    },
+    {
+      "path": "docs/sql_analysis_guide.md",
+      "bytes": 2896,
+      "sha": "9355c99474a7895626f326661a1591c0ce195343",
+      "sha256": "7c36d8d50a6238ae7f58e58f246b53a8125b3993932ce9121dc5b43710f21f51"
+    },
+    {
+      "path": "docs/workforce_methodology.md",
+      "bytes": 1575,
+      "sha": "05310b120411f70d095cbb8964d84d8349aa8d21",
+      "sha256": "705cab31a0b7bf37edd2fd86eacf1fe73194adf4f6d9f205a9a0231f121cf504"
+    },
+    {
+      "path": "images/dashboard/README.md",
+      "bytes": 244,
+      "sha": "d59a81d65aff3459c7567dd4a92b80ba3556f10f",
+      "sha256": "1c00cd8ab1ff5d7fd3cbd34c57e4779d651c3098dcd4c99e0cfcfd8ba5a94297"
+    },
+    {
+      "path": "output/customer_support_analysis.xlsx",
+      "bytes": 192140,
+      "sha": "2f260039bc2a48805d1ee64f8ba63080723df8d1",
+      "sha256": "3e76cc70f6fb052c336e0cda49996318518807eac72d4318a51f60e6a7d5deed"
+    },
+    {
+      "path": "powerbi/dashboard_spec.md",
+      "bytes": 5691,
+      "sha": "d52b49ff40f486d75220c971a7623319f132fa13",
+      "sha256": "e07fd59f82f35c26b09cec9bfbaa26b655fe0405b6a1f9379289f8704a6d6457"
+    },
+    {
+      "path": "powerbi/data_model.md",
+      "bytes": 5895,
+      "sha": "19a17a7c5dbda9c9819d65500d2f0196a62d9d5f",
+      "sha256": "97bd999bef228f9a188643ccc009bb11a8cbb692e85496c9627f8da7b27816ed"
+    },
+    {
+      "path": "powerbi/dax_measures.dax",
+      "bytes": 175,
+      "sha": "65e4ed5623a433111b98c30a99893ba7561fd998",
+      "sha256": "24d61618d036e9b898c5c229b4d6eaeaa0b4ecd51c54740c2a0c2358457c4621"
+    },
+    {
+      "path": "powerbi/measures.dax",
+      "bytes": 5052,
+      "sha": "62f268f2267a598078c7e2fa073eb3b8b1dbf69a",
+      "sha256": "8be0dc196babfeb918d509e471a082ec2db2b0888d8cb3f07f56df8f16bee138"
+    },
+    {
+      "path": "powerbi/processed_queries.pq",
+      "bytes": 6393,
+      "sha": "5d0995e1ae22b8503f1ac3df6aad5ab6903309d3",
+      "sha256": "7a33c8834f979a5a22be263544a0669714d11fddb728018c6527e26d9f35a855"
+    },
+    {
+      "path": "README.md",
+      "bytes": 6635,
+      "sha": "b87f6501663a2786d4afa0edd054f5ed1f72aac9",
+      "sha256": "d8b30cf22e25c78085ddc8a60b64cfc283d0188c5606dbda75e2e945b58d6405"
+    },
+    {
+      "path": "requirements.txt",
+      "bytes": 52,
+      "sha": "3ea86288fbd4e22d94cf658ff22b006f34c52446",
+      "sha256": "95a6a0c49938068225880bfcfd74c699a84517fbd6100b65a533f12b29f391ef"
+    },
+    {
+      "path": "sql/01_data_model.sql",
+      "bytes": 4141,
+      "sha": "c150e5aa420ef83dca09ed491f44187abfc764ef",
+      "sha256": "3dd2bd032645d3f9070fe7f3454540c1b2408cfed83eef2b944fc3097a16448b"
+    },
+    {
+      "path": "sql/02_kpi_definitions.sql",
+      "bytes": 3766,
+      "sha": "8e1e2cff501ef7937b582337306cd96169689d73",
+      "sha256": "8cb3ab3bacee05d747f3fc81f279d796a618260993108100be188c23d9f8b638"
+    },
+    {
+      "path": "sql/03_operations_analysis.sql",
+      "bytes": 6331,
+      "sha": "aa5abd9f55030bd55c4135b9943d14737775bb06",
+      "sha256": "79d569c6111fd3a2f6b2102f9601d306fd99c72a05a4e1488d6e63b705e7a619"
+    },
+    {
+      "path": "sql/04_customer_analysis.sql",
+      "bytes": 1622,
+      "sha": "1e00829b0a38cd78b2867a1c801874002ea0a669",
+      "sha256": "e17432f55ccad628ae5c16f1e476ac523f92a03e7c606552f46fa1acc520c2f5"
+    },
+    {
+      "path": "sql/05_workforce_analysis.sql",
+      "bytes": 2496,
+      "sha": "2260da1e1583cd29b67ffb97e40f7776e902267c",
+      "sha256": "181de6a8a20a86e1aa338c8dad38baefa46fff0521494957412c0e64087ba7c6"
+    },
+    {
+      "path": "sql/create_relational_model.sql",
+      "bytes": 203,
+      "sha": "4070d927e57e6a208878225ab9195e9d496e82db",
+      "sha256": "5a78c44559f7aa617aead09a4aeaeae3ff7e1fba90917da7774f2a4e44d7fc50"
+    },
+    {
+      "path": "sql/README.md",
+      "bytes": 1395,
+      "sha": "145381fb39c209085d9e0ac30f20adca8fd9cd1a",
+      "sha256": "aeb6c75010cc14adf245895df3c00f144eae0c6ffbe506439918e3ed1d7d804f"
+    },
+    {
+      "path": "src/assess_data_quality.py",
+      "bytes": 7926,
+      "sha": "9dc92811c16bb8e479f149ecbf74cc9d8df9bded",
+      "sha256": "6b3416326ee00cd7b4b02b0ac0acb7ad0117a97c6318a3bc3981f80deafc29ff"
+    },
+    {
+      "path": "src/build_portfolio.py",
+      "bytes": 10266,
+      "sha": "659bb8dbe6e52153b0a1788eaf638178d2776c47",
+      "sha256": "60bb4a7a7c9db1f1b07ee1a727f8d8675db013000f941d0e4f5468d1faefaf05"
+    },
+    {
+      "path": "src/check_python.py",
+      "bytes": 133,
+      "sha": "3dbf32d73b296b4c63844f24f51b2cdea49b75e5",
+      "sha256": "339fa46a37d79cc23aa25ccdf21151f6689433c192df27ebc92d6db2b35d6745"
+    },
+    {
+      "path": "src/clean_data.py",
+      "bytes": 6452,
+      "sha": "bea80fa07878f14e12b513939a58f3507ee10e81",
+      "sha256": "95ff85de431d0af49a8bbb1f09361b73684e1648147a3a37796ee3b3491ba03e"
+    },
+    {
+      "path": "src/contract.py",
+      "bytes": 11307,
+      "sha": "051e4b19cfabb9b2025092271255415fe926e87c",
+      "sha256": "27d2d30041518b3dccc3cc0d288dca7bee96516551090d3740ed48cd0df39ea3"
+    },
+    {
+      "path": "src/export_excel.py",
+      "bytes": 33292,
+      "sha": "fa26087ddabbd3c8b8c5cffbea31c402098dfc33",
+      "sha256": "1f1972acbeaddb46630233b4116f3e3a115416eba6bf22692c4697257eb62a21"
+    },
+    {
+      "path": "src/run_pipeline.py",
+      "bytes": 1645,
+      "sha": "816161837a5e84412650250cb2029735b01f547d",
+      "sha256": "ab74012e899ec0ba1f46f4802107ff4c7f4d387e2d3f54bc9e6902be6669ebe0"
+    },
+    {
+      "path": "src/staffing_analysis.py",
+      "bytes": 3475,
+      "sha": "a543819b21adc0bef49c1df66e9419a9ecb4799f",
+      "sha256": "01bf0d94463cb0cc04146945d66c91cb869ed3631c51e925b730fdf006aaffae"
+    },
+    {
+      "path": "src/validate_clean_data.py",
+      "bytes": 1039,
+      "sha": "31f6e2e2654187e0105128a5a3fb50552c0a2ea6",
+      "sha256": "d66c91820bb86edb435c9953951e9a3e491b1870eda08141dc9c208759bcc643"
+    },
+    {
+      "path": "src/verified_metrics.py",
+      "bytes": 6808,
+      "sha": "1b0384c0ed921ec836be06aa45f4c6c7747ec605",
+      "sha256": "1f9769f3da2379d28870a0fec3d73fca3422be97f8dbc645e090be1727eaf4ae"
+    },
+    {
+      "path": "tests/test_outputs.py",
+      "bytes": 11074,
+      "sha": "636bcb4f2588f9eb2bea927da5061d1b6d14cbb4",
+      "sha256": "7cee303278a5d3c60544b650a6711ae49e863d0c732f9b355fa66362f737bb45"
+    },
+    {
+      "path": "tests/test_pipeline.py",
+      "bytes": 10859,
+      "sha": "949aaf2b89dddd6cb1658ff9265fccc515391d91",
+      "sha256": "b5257d21feb5cd27d6349cdf32c7d7772e737b413333fd4e172c0abbc60208c6"
+    },
+    {
+      "path": "tools/synthetic_data_generator.py",
+      "bytes": 20266,
+      "sha": "71454acc492bcbdc0da265eeafc9a39d0bf1f6ef",
+      "sha256": "83e5078c39d21d5d3a6445d5c94644617e4111e8f7702e6981340e830ef0c1b7"
+    },
+    {
+      "path": "tools/validate_generation.py",
+      "bytes": 1573,
+      "sha": "87785555b27e3763e8e5c62aacfff3084c4dce33",
+      "sha256": "2900cecd98c5bb647e9b690bf4102903fe621c20549a362a3b3a6dc45ea3bee2"
+    }
+  ]
+}

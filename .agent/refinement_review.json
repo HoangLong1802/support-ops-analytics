@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "readme_words": 897,
+  "business_context_words": 510,
+  "local_links": "PASS",
+  "public_traces": "PASS",
+  "python_syntax": "PASS",
+  "unchanged_sql_schema": true,
+  "unchanged_sql_views": true,
+  "original_queries_preserved_once": 23,
+  "line_endings": {
+    "src/build_portfolio.py": {
+      "before_crlf": 1,
+      "after_crlf": 0,
+      "before_crcrlf": 0,
+      "after_crcrlf": 0
+    },
+    "src/clean_data.py": {
+      "before_crlf": 2,
+      "after_crlf": 0,
+      "before_crcrlf": 0,
+      "after_crcrlf": 0
+    },
+    "tests/test_pipeline.py": {
+      "before_crlf": 3,
+      "after_crlf": 0,
+      "before_crcrlf": 0,
+      "after_crcrlf": 0
+    },
+    "README.md": {
+      "before_crlf": 82,
+      "after_crlf": 0,
+      "before_crcrlf": 0,
+      "after_crcrlf": 0
+    }
+  }
+}

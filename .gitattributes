@@ -1,2 +1,5 @@
 # Preserve reproducible CSV bytes across platforms and Git checkouts.
 *.csv -text
+# Analytics JSON is also hashed evidence; preserve every data-layer byte.
+data/** -text
+*.xlsx binary

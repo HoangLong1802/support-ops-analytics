@@ -1,0 +1,11 @@
+{
+  "original_queries_preserved": 23,
+  "by_file": {
+    "02_kpi_definitions.sql": 2,
+    "03_operations_analysis.sql": 13,
+    "04_customer_analysis.sql": 3,
+    "05_workforce_analysis.sql": 5
+  },
+  "schema_unchanged": true,
+  "analytical_definitions_changed": false
+}

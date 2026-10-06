@@ -1,0 +1,345 @@
+{
+  "raw_hashes": {
+    "agents": "42a9c17ee4a3a69a9fa7869a9cb6fe529a35e512847830714a7cd582b27ff89d",
+    "sla_policies": "54dcbf5887fe5237776eb5465407349983dc622ad122c2cbc2792272721acde8",
+    "tickets": "8fe7a644d3d21e18fc8df4be6d381640af2fce11cf13412215d5dc9dc2a025a6",
+    "ticket_work_logs": "1f427ed46af6f95ddd060c2d4a4721c1ddb8040a31a2588dc70c0f6d00c57efa",
+    "workforce_daily": "40a666c87c3083c1544fdaed881ecaddd2766d1c6eb8240c8f2ba78fb1a483ac"
+  },
+  "kpis": {
+    "total_tickets": 14774,
+    "completed_tickets": 14196,
+    "open_tickets": 282,
+    "pending_tickets": 296,
+    "average_first_response_minutes": 54.8903404860218,
+    "average_resolution_hours": 117.04776169343477,
+    "median_resolution_hours": 6.216666666666667,
+    "p90_resolution_hours": 29.733333333333334,
+    "p95_resolution_hours": 48.75,
+    "average_csat": 4.071457408155026,
+    "csat_responses": 7431,
+    "csat_response_rate": 0.5234573119188504,
+    "reopened_tickets": 1234,
+    "reopen_rate": 0.0835251116826858,
+    "backlog": 578,
+    "backlog_rate": 0.039122783267903076,
+    "weekday_weekend_ratio": 1.9247203548975313,
+    "handling_hours": 20183.716666666667,
+    "productive_capacity_hours": 29361.616666666665,
+    "utilization": 0.6874184380174343,
+    "median_team_day_utilization": 0.6862547851910763,
+    "fr_sla_met": 12990,
+    "fr_sla_breached": 1783,
+    "fr_sla_pending": 1,
+    "fr_sla_eligible": 14773,
+    "fr_sla_compliance": 0.8793068435659649,
+    "fr_breach_rate": 0.12069315643403507,
+    "resolution_sla_met": 11243,
+    "resolution_sla_breached": 3514,
+    "resolution_sla_pending": 17,
+    "resolution_sla_eligible": 14757,
+    "resolution_sla_compliance": 0.7618757199972894,
+    "resolution_breach_rate": 0.23812428000271058,
+    "overall_sla_met": 9986,
+    "overall_sla_breached": 4772,
+    "overall_sla_pending": 16,
+    "overall_sla_eligible": 14758,
+    "overall_sla_compliance": 0.6766499525680987,
+    "overall_breach_rate": 0.3233500474319013,
+    "backlog_over_24_hours": 559,
+    "backlog_over_48_hours": 552,
+    "backlog_over_72_hours": 549
+  },
+  "cleaning": {
+    "raw": {
+      "agents": 18,
+      "sla_policies": 16,
+      "tickets": 15105,
+      "ticket_work_logs": 18278,
+      "workforce_daily": 6327
+    },
+    "exact_copies_removed": {
+      "agents": 0,
+      "sla_policies": 0,
+      "tickets": 75,
+      "ticket_work_logs": 36,
+      "workforce_daily": 0
+    },
+    "transformations": {
+      "channel_normalized": 120,
+      "category_restored": 60,
+      "invalid_csat_set_null": 23,
+      "unique_transformed_ticket_rows": 203
+    },
+    "quarantined": {
+      "agents": 0,
+      "sla_policies": 0,
+      "tickets": 256,
+      "ticket_work_logs": 341,
+      "workforce_daily": 9
+    },
+    "processed": {
+      "agents": 18,
+      "sla_policies": 16,
+      "tickets": 14774,
+      "ticket_work_logs": 17901,
+      "workforce_daily": 6318
+    },
+    "reason_counts": {
+      "agents": {},
+      "sla_policies": {},
+      "tickets": {
+        "conflicting_key": 60,
+        "invalid_hierarchy": 60,
+        "completed_missing_fields": 38,
+        "missing_hierarchy": 60,
+        "unknown_owner": 15,
+        "response_order": 23
+      },
+      "ticket_work_logs": {
+        "unknown_ticket": 295,
+        "missing_workforce": 46,
+        "invalid_handling": 27
+      },
+      "workforce_daily": {
+        "invalid_capacity": 9
+      }
+    },
+    "validation": "PASS"
+  },
+  "quality_issues": [
+    {
+      "dataset": "tickets",
+      "issue": "exact_duplicate",
+      "count": 75,
+      "percentage": 0.49652432969215493,
+      "severity": "HIGH",
+      "business_impact": "Repeated records inflate volume or effort.",
+      "treatment": "AUTO-FIX"
+    },
+    {
+      "dataset": "tickets",
+      "issue": "conflicting_key",
+      "count": 60,
+      "percentage": 0.3972194637537239,
+      "severity": "CRITICAL",
+      "business_impact": "Identity is ambiguous; joins cannot select a reliable version.",
+      "treatment": "QUARANTINE"
+    },
+    {
+      "dataset": "tickets",
+      "issue": "missing_hierarchy",
+      "count": 120,
+      "percentage": 0.7944389275074478,
+      "severity": "HIGH",
+      "business_impact": "Unknown demand categories affect routing and mix reporting.",
+      "treatment": "REVIEW"
+    },
+    {
+      "dataset": "tickets",
+      "issue": "invalid_hierarchy",
+      "count": 60,
+      "percentage": 0.3972194637537239,
+      "severity": "HIGH",
+      "business_impact": "Contract violation can distort service, workload or relationship reporting.",
+      "treatment": "QUARANTINE"
+    },
+    {
+      "dataset": "tickets",
+      "issue": "channel_format",
+      "count": 120,
+      "percentage": 0.7944389275074478,
+      "severity": "LOW",
+      "business_impact": "Formatting splits channel groups without changing their meaning.",
+      "treatment": "AUTO-FIX"
+    },
+    {
+      "dataset": "tickets",
+      "issue": "unknown_owner",
+      "count": 15,
+      "percentage": 0.09930486593843098,
+      "severity": "HIGH",
+      "business_impact": "Contract violation can distort service, workload or relationship reporting.",
+      "treatment": "QUARANTINE"
+    },
+    {
+      "dataset": "tickets",
+      "issue": "response_order",
+      "count": 23,
+      "percentage": 0.15226746110559417,
+      "severity": "CRITICAL",
+      "business_impact": "Contract violation can distort service, workload or relationship reporting.",
+      "treatment": "QUARANTINE"
+    },
+    {
+      "dataset": "tickets",
+      "issue": "completed_missing_fields",
+      "count": 38,
+      "percentage": 0.25157232704402516,
+      "severity": "CRITICAL",
+      "business_impact": "Completed lifecycle lacks evidence needed for service metrics.",
+      "treatment": "QUARANTINE"
+    },
+    {
+      "dataset": "tickets",
+      "issue": "invalid_csat",
+      "count": 23,
+      "percentage": 0.15226746110559417,
+      "severity": "MEDIUM",
+      "business_impact": "Out-of-domain scores bias satisfaction.",
+      "treatment": "AUTO-FIX"
+    },
+    {
+      "dataset": "ticket_work_logs",
+      "issue": "exact_duplicate",
+      "count": 36,
+      "percentage": 0.1969580916949338,
+      "severity": "HIGH",
+      "business_impact": "Repeated records inflate volume or effort.",
+      "treatment": "AUTO-FIX"
+    },
+    {
+      "dataset": "ticket_work_logs",
+      "issue": "unknown_ticket",
+      "count": 65,
+      "percentage": 0.35561877667140823,
+      "severity": "HIGH",
+      "business_impact": "Handling refers to a missing or ambiguous ticket.",
+      "treatment": "QUARANTINE"
+    },
+    {
+      "dataset": "ticket_work_logs",
+      "issue": "invalid_handling",
+      "count": 27,
+      "percentage": 0.14771856877120035,
+      "severity": "HIGH",
+      "business_impact": "Contract violation can distort service, workload or relationship reporting.",
+      "treatment": "QUARANTINE"
+    },
+    {
+      "dataset": "workforce_daily",
+      "issue": "invalid_capacity",
+      "count": 9,
+      "percentage": 0.1422475106685633,
+      "severity": "CRITICAL",
+      "business_impact": "Invalid productive capacity distorts utilization and staffing.",
+      "treatment": "QUARANTINE"
+    }
+  ],
+  "source_profiles": [
+    {
+      "dataset": "agents",
+      "grain": "agent_id",
+      "rows": 18,
+      "columns": 3,
+      "missing_cells": 0,
+      "exact_copies": 0,
+      "key_unique": true,
+      "unique_affected_rows": 0
+    },
+    {
+      "dataset": "sla_policies",
+      "grain": "policy_id",
+      "rows": 16,
+      "columns": 5,
+      "missing_cells": 0,
+      "exact_copies": 0,
+      "key_unique": true,
+      "unique_affected_rows": 0
+    },
+    {
+      "dataset": "tickets",
+      "grain": "ticket_id",
+      "rows": 15105,
+      "columns": 14,
+      "missing_cells": 8273,
+      "exact_copies": 75,
+      "key_unique": false,
+      "unique_affected_rows": 534
+    },
+    {
+      "dataset": "ticket_work_logs",
+      "grain": "work_log_id",
+      "rows": 18278,
+      "columns": 5,
+      "missing_cells": 0,
+      "exact_copies": 36,
+      "key_unique": false,
+      "unique_affected_rows": 101
+    },
+    {
+      "dataset": "workforce_daily",
+      "grain": "agent_id, work_date",
+      "rows": 6327,
+      "columns": 5,
+      "missing_cells": 0,
+      "exact_copies": 0,
+      "key_unique": true,
+      "unique_affected_rows": 9
+    }
+  ],
+  "segments": {
+    "technical_tickets": 4357,
+    "technical_ticket_share": 0.2949099769865981,
+    "technical_resolution_breaches": 1760,
+    "technical_resolution_breach_share": 0.5008537279453614,
+    "weekday_average_arrivals": 46.89655172413793,
+    "weekend_average_arrivals": 24.365384615384617,
+    "morning_09_11_tickets": 5274,
+    "morning_09_11_share": 0.356978475700555,
+    "peak_hour": 10,
+    "reopened_csat": 3.7392,
+    "reopened_responses": 625,
+    "not_reopened_csat": 4.101968851013812,
+    "not_reopened_responses": 6806,
+    "backlog_resolution_breached": 561,
+    "backlog_by_category": {
+      "technical_support": 171,
+      "account_access": 124,
+      "billing": 120,
+      "product_service_inquiry": 86,
+      "service_request": 77
+    },
+    "backlog_over48_by_category": {
+      "technical_support": 160,
+      "account_access": 120,
+      "billing": 115,
+      "product_service_inquiry": 84,
+      "service_request": 73
+    },
+    "longest_ticket": "TKT000178",
+    "longest_resolution_hours": 8441.816666666668,
+    "longest_created_at": "2025-10-05 04:57:12+00:00",
+    "longest_resolved_at": "2026-09-21 22:46:12+00:00",
+    "staffing_eligible_team_days": 1011,
+    "positive_gap_team_days": 235,
+    "maximum_estimated_gap_fte": 2.9227941176470593,
+    "agent_days_over100_utilization": 1291
+  },
+  "conflicting_ticket_ids": 30,
+  "source_data_hashes": {
+    "data/analytics/agent_daily_workload.csv": "d1db9e348fc064e4a29eb162f67a9616e3fb4025a376b58aed6f15023b8d2fbc",
+    "data/analytics/cleaning_audit.json": "ba8771c5b24349ba3ffa6032fb8540795200bab5ef61c42afdfd4f7a3aa1a90f",
+    "data/analytics/dim_categories.csv": "a20fef48c516b16208228a1eb1be3a5e42de480d47d301f623b790db90503a42",
+    "data/analytics/dim_date.csv": "d9d9916e84845eeee07d63e5060b4ccf2761eeee31dac5cc74f8231419e6c84e",
+    "data/analytics/generation_metadata.json": "6f4076fe186c83cbc4cdeaff6805bc0d2a315886c4603090a979f7933029c6a4",
+    "data/analytics/quality_audit.json": "397856fe0933ace4b8778e50e8085619dd3ada05623c6df62d34b523e03c7af1",
+    "data/analytics/staffing_daily.csv": "8da882bf7452db1cac507582f37df00a5eb16bb2b8ceea51715996f3803e797a",
+    "data/analytics/ticket_service_metrics.csv": "303040331954bcb9f47f3d9f7a0cdb90d8cf9337eeaa8ee397ef1c21989ad7aa",
+    "data/analytics/verified_kpis.csv": "2b5911a887ece94c42464d00c2c4d5c999d9dc77f3122eae56f81f39fcba5e83",
+    "data/processed/agents_clean.csv": "42a9c17ee4a3a69a9fa7869a9cb6fe529a35e512847830714a7cd582b27ff89d",
+    "data/processed/sla_policies_clean.csv": "54dcbf5887fe5237776eb5465407349983dc622ad122c2cbc2792272721acde8",
+    "data/processed/ticket_work_logs_clean.csv": "fc0a63408450ce9fe2cc5e351486944b5f3f08a815e7e17678e88070d7df9058",
+    "data/processed/tickets_clean.csv": "d03b412587b24bc22c2fa612a2d4dfc5821c044008157432adbd6a3f0a313726",
+    "data/processed/workforce_daily_clean.csv": "e60aeb1d11e076455417618b3ea7f80db1886ac43f3446982a8f99b302cea426",
+    "data/quarantine/all_quarantine_records.csv": "0dbc32100cc1379b24067423ef10ce2e81e3f97a3c63d44aba3350b86315639e",
+    "data/quarantine/ticket_work_logs_quarantine.csv": "c28db70173546636c34ea6668fe028184f171d4ea169599230ca909b7aeb6d0b",
+    "data/quarantine/tickets_quarantine.csv": "41be571de2d9cf6a933ea1d38150fb93f77b19d0368cd07950489da7fc79042f",
+    "data/quarantine/workforce_daily_quarantine.csv": "63ceb50d9697d42fcb606a8605ef7230aea50535c0c3c67c737aad8f45b2a366",
+    "data/raw/agents.csv": "42a9c17ee4a3a69a9fa7869a9cb6fe529a35e512847830714a7cd582b27ff89d",
+    "data/raw/sla_policies.csv": "54dcbf5887fe5237776eb5465407349983dc622ad122c2cbc2792272721acde8",
+    "data/raw/ticket_work_logs.csv": "1f427ed46af6f95ddd060c2d4a4721c1ddb8040a31a2588dc70c0f6d00c57efa",
+    "data/raw/tickets.csv": "8fe7a644d3d21e18fc8df4be6d381640af2fce11cf13412215d5dc9dc2a025a6",
+    "data/raw/workforce_daily.csv": "40a666c87c3083c1544fdaed881ecaddd2766d1c6eb8240c8f2ba78fb1a483ac"
+  }
+}

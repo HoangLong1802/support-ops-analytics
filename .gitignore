@@ -1,12 +1,40 @@
-# Internal workflow and recovery artifacts
-.agent/
-STATE.md
-AGENTS.md
-**/AGENTS.md
-_backups/
+# Disposable Python environments, installed dependencies and caches
 .venv/
+venv/
+env/
+.agent/python_packages/
 __pycache__/
 *.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
 .ipynb_checkpoints/
+build/
+dist/
+*.egg-info/
+.eggs/
+.cache/
+
+# Local editors, credentials and secrets
+.vscode/
+.idea/
+.env
+.env.*
+*.key
+*.pem
+credentials*
+secrets*
+
+# OS files, temporary output and duplicate recovery archives
+Thumbs.db
+.DS_Store
+*.tmp
+*.temp
+~$*
 *.log
+_backups/
+.agent/*.zip
 BACKUP_CHECKPOINTS.zip

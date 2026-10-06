@@ -1,0 +1,9 @@
+{
+  "tests_run": 23,
+  "failures": 0,
+  "errors": 0,
+  "focused_output_tests": 9,
+  "command": "python -m unittest discover -s tests -v",
+  "excel_validation": "PASS",
+  "native_dax_execution": false
+}
