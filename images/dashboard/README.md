@@ -1,2 +1,3 @@
-﻿Place screenshots captured from the completed Power BI Desktop report here. The repository currently contains a three-page specification and measure source; no screenshots or PBIX have been created.
+# Dashboard Images
 
+Real Power BI exports belong in `output/dashboard/`. No screenshots are available yet. Build and validate the actual three-page report before exporting images; see [dashboard specification](../../powerbi/dashboard_spec.md).

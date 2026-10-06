@@ -8,14 +8,17 @@ FR SLA Met = CALCULATE ( [Total Tickets], fact_tickets[fr_sla_outcome] = "MET" )
 FR SLA Breached = CALCULATE ( [Total Tickets], fact_tickets[fr_sla_outcome] = "BREACHED" )
 FR SLA Pending = CALCULATE ( [Total Tickets], fact_tickets[fr_sla_outcome] = "PENDING" )
 FR SLA Compliance % = DIVIDE ( [FR SLA Met], [FR SLA Met] + [FR SLA Breached] )
+FR SLA Breach % = DIVIDE ( [FR SLA Breached], [FR SLA Met] + [FR SLA Breached] )
 Resolution SLA Met = CALCULATE ( [Total Tickets], fact_tickets[resolution_sla_outcome] = "MET" )
 Resolution SLA Breached = CALCULATE ( [Total Tickets], fact_tickets[resolution_sla_outcome] = "BREACHED" )
 Resolution SLA Pending = CALCULATE ( [Total Tickets], fact_tickets[resolution_sla_outcome] = "PENDING" )
 Resolution SLA Compliance % = DIVIDE ( [Resolution SLA Met], [Resolution SLA Met] + [Resolution SLA Breached] )
+Resolution SLA Breach % = DIVIDE ( [Resolution SLA Breached], [Resolution SLA Met] + [Resolution SLA Breached] )
 Overall SLA Met = CALCULATE ( [Total Tickets], fact_tickets[overall_sla_outcome] = "MET" )
 Overall SLA Breached = CALCULATE ( [Total Tickets], fact_tickets[overall_sla_outcome] = "BREACHED" )
 Overall SLA Pending = CALCULATE ( [Total Tickets], fact_tickets[overall_sla_outcome] = "PENDING" )
 Overall SLA Compliance % = DIVIDE ( [Overall SLA Met], [Overall SLA Met] + [Overall SLA Breached] )
+Overall SLA Breach % = DIVIDE ( [Overall SLA Breached], [Overall SLA Met] + [Overall SLA Breached] )
 
 Average First Response Minutes = AVERAGE ( fact_tickets[first_response_minutes] )
 Average Resolution Hours = DIVIDE ( AVERAGE ( fact_tickets[resolution_minutes] ), 60 )
@@ -30,17 +33,21 @@ RETURN
     )
 Average CSAT = AVERAGE ( fact_tickets[csat_score] )
 CSAT Responses = CALCULATE ( [Total Tickets], fact_tickets[completed] = TRUE (), NOT ISBLANK ( fact_tickets[csat_score] ) )
-CSAT Response Rate = DIVIDE ( [CSAT Responses], [Completed Tickets] )
+CSAT Response Rate % = DIVIDE ( [CSAT Responses], [Completed Tickets] )
 Reopened Tickets = CALCULATE ( [Total Tickets], fact_tickets[reopen_count] > 0 )
-Reopen Rate = DIVIDE ( [Reopened Tickets], [Total Tickets] )
+Reopen Rate % = DIVIDE ( [Reopened Tickets], [Total Tickets] )
 
 Backlog = [Open Tickets] + [Pending Tickets]
-Backlog > 24 Hours = CALCULATE ( [Total Tickets], fact_tickets[completed] = FALSE (), fact_tickets[backlog_age_minutes] > 1440 )
-Backlog > 48 Hours = CALCULATE ( [Total Tickets], fact_tickets[completed] = FALSE (), fact_tickets[backlog_age_minutes] > 2880 )
-Backlog > 72 Hours = CALCULATE ( [Total Tickets], fact_tickets[completed] = FALSE (), fact_tickets[backlog_age_minutes] > 4320 )
+Backlog % = DIVIDE ( [Backlog], [Total Tickets] )
+Backlog >24 Hours = CALCULATE ( [Total Tickets], fact_tickets[completed] = FALSE (), fact_tickets[backlog_age_minutes] > 1440 )
+Backlog >48 Hours = CALCULATE ( [Total Tickets], fact_tickets[completed] = FALSE (), fact_tickets[backlog_age_minutes] > 2880 )
+Backlog >72 Hours = CALCULATE ( [Total Tickets], fact_tickets[completed] = FALSE (), fact_tickets[backlog_age_minutes] > 4320 )
 
 Handling Hours = DIVIDE ( SUM ( fact_work_logs[handling_minutes] ), 60 )
-Productive Capacity Hours = DIVIDE ( SUM ( fact_workforce_daily[productive_minutes] ), 60 )
+Scheduled Hours = DIVIDE ( SUM ( fact_workforce_daily[scheduled_minutes] ), 60 )
+Absence Hours = DIVIDE ( SUM ( fact_workforce_daily[absence_minutes] ), 60 )
+Shrinkage Hours = DIVIDE ( SUM ( fact_workforce_daily[shrinkage_minutes] ), 60 )
+Productive Capacity Hours = [Scheduled Hours] - [Absence Hours] - [Shrinkage Hours]
 Utilization % = DIVIDE ( [Handling Hours], [Productive Capacity Hours] )
 
 Calendar Days = COUNTROWS ( dim_date )
@@ -54,8 +61,8 @@ DIVIDE (
     CALCULATE ( [Resolution SLA Breached], REMOVEFILTERS ( dim_categories ) )
 )
 
-Previous Month Tickets = CALCULATE ( [Total Tickets], DATEADD ( dim_date[date_key], -1, MONTH ) )
-MoM Ticket Change % = DIVIDE ( [Total Tickets] - [Previous Month Tickets], [Previous Month Tickets] )
+Tickets Previous Month = CALCULATE ( [Total Tickets], DATEADD ( dim_date[date_key], -1, MONTH ) )
+MoM Ticket Change % = DIVIDE ( [Total Tickets] - [Tickets Previous Month], [Tickets Previous Month] )
 7 Day Average Tickets =
 VAR EndDate = MAX ( dim_date[date_key] )
 VAR WindowDates =

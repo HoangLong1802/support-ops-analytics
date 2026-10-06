@@ -10,7 +10,7 @@ The model separates service outcomes from the effort and capacity used to delive
 | fact_work_logs | One ticket/actual-handler/local-date entry / work_log_id; unique ticket_id + agent_id + work_date | Actual handling effort across agents and days |
 | fact_workforce_daily | One agent/local date / agent_id + work_date | Scheduled, absent and shrinkage minutes; productive capacity |
 
-The processed sources contain **14,774 tickets, 17,901 work-log entries and 6,318 workforce rows**. SQL derives workload through a view; the BI workforce import also carries preaggregated handling for reference. The DAX handling measure sums `fact_work_logs`, so that reference column is never added to log effort again.
+The processed sources contain **14,774 tickets, 17,901 work-log entries and 6,318 workforce rows**. SQL derives workload through a view. Power BI imports the processed facts and derives service/capacity fields in Power Query; DAX handling sums `fact_work_logs` and capacity comes from workforce. Excel presents the verified results and does not supply the BI model.
 
 ## Supporting dimensions
 

@@ -9,9 +9,11 @@ Data Quality Assessment
                  ↓
 Cleaning Decisions → Processed Data + Quarantine
                  ↓
-Data Model → MySQL / SQL
+Data Model → SQL / Python Analysis
                  ↓
-Power BI Specification
+Excel Analytical Output
+                 ↓
+Power BI Dashboard Specification
                  ↓
 Insights & Recommendations
 ```
@@ -27,7 +29,8 @@ Insights & Recommendations
 | Processed data | Valid observations and preserved exclusions | data/processed/; data/quarantine/; src/validate_clean_data.py |
 | Data model | [Analytical Model](04_data_model.md) | sql/01_data_model.sql; database/import.sql |
 | SQL analysis | [SQL guide](../sql/README.md) | sql/02–05; database/validation.sql |
-| Power BI | [Model](../powerbi/data_model.md); [report questions](../powerbi/dashboard_spec.md) | measures.dax; analytical CSV imports |
+| Excel analytical output | [Workbook](../output/customer_support_analysis.xlsx) | src/export_excel.py; verified results for human inspection |
+| Power BI | [Model](../powerbi/data_model.md); [report questions](../powerbi/dashboard_spec.md) | processed CSV imports; processed_queries.pq; measures.dax |
 | Insights and actions | [Business Insights](05_business_insights.md) | src/verified_metrics.py; src/build_portfolio.py |
 | Daily capacity planning | [Workforce Methodology](workforce_methodology.md) | src/staffing_analysis.py; staffing_daily.csv |
 
@@ -36,3 +39,5 @@ The synthetic operational source makes the project reproducible. Assessment dete
 Python provides the executed KPI and cohort evidence. SQL and Power BI are the prepared reporting path; native query, DAX and rendered-report validation remain pending. [Shared KPI definitions](kpi_definitions.md) make that boundary explicit.
 
 Creation-date trends describe arriving ticket cohorts. Backlog is known only at the fixed snapshot. Final ticket ownership and actual handling effort have different meanings and stay separate through the model.
+
+Markdown explains decisions and limitations; Excel exposes results; Power BI is the prepared visualization path. The processed layer remains the analytical source. The workbook is never the primary BI source.

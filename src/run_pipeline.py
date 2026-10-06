@@ -22,7 +22,7 @@ def main():
     args = parser.parse_args()
     quality = ["src/assess_data_quality.py"]
     cleaning = ["src/clean_data.py", "src/validate_clean_data.py"]
-    analytics = ["src/verified_metrics.py", "src/staffing_analysis.py", "src/build_portfolio.py"]
+    analytics = ["src/verified_metrics.py", "src/staffing_analysis.py", "src/build_portfolio.py", "src/export_excel.py"]
     stages = {
         "raw": ["tools/synthetic_data_generator.py", "tools/validate_generation.py"],
         "quality": quality,

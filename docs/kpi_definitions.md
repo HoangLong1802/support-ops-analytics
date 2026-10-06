@@ -1,6 +1,6 @@
 # KPI Definitions and Cross-Tool Review
 
-The executed reference is [verified_metrics.py](../src/verified_metrics.py), with values in [verified_kpis.csv](../data/analytics/verified_kpis.csv). [SQL definitions](../sql/02_kpi_definitions.sql) implement the same snapshot rules. [DAX](../powerbi/measures.dax) aggregates the Python-derived fields imported into Power BI.
+The executed reference is [verified_metrics.py](../src/verified_metrics.py), with values in [verified_kpis.csv](../data/analytics/verified_kpis.csv). [The Excel export](../src/export_excel.py) reuses those functions and validates every Executive_KPIs value. [SQL definitions](../sql/02_kpi_definitions.sql) implement the same snapshot rules. [Power Query](../powerbi/processed_queries.pq) derives service fields from processed CSVs; [DAX](../powerbi/measures.dax) aggregates them.
 
 | KPI | Common definition | Unfiltered Python result |
 |---|---|---:|
@@ -30,6 +30,6 @@ Ticket outcome filters use creation cohorts and final owners. Workload/capacity 
 
 ## Review status
 
-Python tests cover deadline equality, missing events, outcome partitions, denominators, backlog and zero capacity. SQL and DAX definitions were reviewed against the executed reference; **MySQL queries and DAX have not been run in their native tools**. This is definition alignment, with runtime reconciliation still pending.
+Python tests cover deadline equality, missing events, outcome partitions, denominators, backlog and zero capacity. Output tests reopen the workbook, compare its full-precision values with Python/saved KPIs, and inspect the core DAX source contract. That static check verifies definitions and dependencies; **it does not execute DAX**. M, SQL and DAX native runtime reconciliation remains pending. Workbook comparisons allow 1e-9 absolute numeric tolerance and 1e-12 relative tolerance; percent displays round to two decimals without changing the stored fractions.
 
 SQL duration P90/P95 uses nearest rank, while pandas uses linear interpolation. That documented estimator difference is retained; counts and KPI rates must match. Reopen Rate is not FCR, and no handling measure uses elapsed resolution duration.
