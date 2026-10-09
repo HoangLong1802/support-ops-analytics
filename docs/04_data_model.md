@@ -37,4 +37,4 @@ Power BI uses active one-to-many, single-direction relationships from dimensions
 
 Category, priority and channel filter ticket outcomes; they do not allocate full agent/day capacity to that ticket cohort. Optional cohort handling uses a separate measure, while utilization keeps its stated handler/date scope.
 
-[The SQL model](../sql/01_data_model.sql) enforces keys and relationships. [The Power BI model](../powerbi/data_model.md) provides file mappings, relationships and filter rules. [KPI definitions](kpi_definitions.md) show the common aggregation logic and the remaining native-tool validation work.
+[The SQL model](../sql/01_data_model.sql) enforces keys and relationships. The Power BI model uses the same tables and relationships (see [powerbi/README.md](../powerbi/README.md)). [KPI definitions](kpi_definitions.md) show the common aggregation logic and the remaining native-tool validation work.

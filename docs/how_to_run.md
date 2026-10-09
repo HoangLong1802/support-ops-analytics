@@ -30,7 +30,7 @@ Chạy riêng: `python src/case_study.py` cập nhật claim/docs; `python src/e
 
 ## MySQL
 
-Giữ MySQL 8.0.16+ để CHECK constraints được enforce. MySQL native chưa được chạy trong phiên này. [SQL run guide](sql_analysis_guide.md) ghi setup, thứ tự, outputs và lỗi.
+Giữ MySQL 8.0.16+ để CHECK constraints được enforce. MySQL native chưa được chạy trong phiên này. Xem [sql/README.md](../sql/README.md) cho thứ tự chạy.
 
 ## Power BI
 

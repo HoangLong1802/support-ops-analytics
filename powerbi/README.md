@@ -1,24 +1,28 @@
-# Power BI / Implementation package
+# Power BI
 
-**Chưa có PBIX hoặc dashboard native hoàn thành.** Không tìm thấy Power BI Desktop trong các vị trí cài đặt thông thường đã kiểm tra; WindowsApps không đọc được (EPERM), nên không kết luận toàn máy chưa cài; native Windows automation pipe không kết nối. M/DAX chưa được thực thi và ảnh workbook không được dùng làm ảnh Power BI.
+**English** | [Tiếng Việt](README.vi.md)
 
-Phần đã chuẩn bị:
+- `customer_support_operations.pbix`: the report (5 pages) and the model.
+- `processed_queries.pq`: the Power Query (M) code. It reads `data/processed/*_clean.csv` through a `ProjectFolder` path; change that path if you clone the repo elsewhere.
+- `measures.dax`: DAX measures. It does not yet include the 13 measures I added later (Active Agents, Tickets per Agent, Low CSAT, backlog age, rolling 30-day average, month-over-month change, handling and shrinkage measures); those exist only in the PBIX.
+- `acceptance_reference.json`: reference numbers computed in Python.
 
-| File | Mục đích |
-|---|---|
-| [processed_queries.pq](processed_queries.pq) | 5 processed CSV → 7 model tables; timezone, snapshot SLA, dates, nulls |
-| [data_model.md](data_model.md) | Grain, 1:* relationships, single filter direction và model diagram |
-| [measures.dax](measures.dax) | Ticket, SLA, CSAT, backlog, workload/capacity, weekday/weekend measures |
-| [dashboard_spec.md](dashboard_spec.md) | Hai trang và business question của từng trang |
-| [acceptance_reference.json](acceptance_reference.json) | Python reference cho all/category/priority/owner/month cohorts |
-| [desktop_checklist.md](desktop_checklist.md) | Quy trình dựng, mở, đổi path, refresh và kiểm thử native |
+## Model
 
-## Cần thực hiện trong Desktop
+Seven tables in a star layout: `fact_tickets`, `fact_work_logs`, `fact_workforce_daily`, `dim_date`, `dim_agents`, `dim_sla_policies` and `dim_categories`. Eight many-to-one relationships, single direction. Facts are not joined to each other. Power BI's automatic date tables are still on.
 
-1. Cài/mở Power BI Desktop ở máy có hỗ trợ, tạo blank queries từ từng block M. Đặt ProjectFolder tới repo clone; disable load hai helper queries.
-2. Load model tables, đánh dấu dim_date, cấu hình single-direction dimensions → facts. Không nối active facts với nhau.
-3. Thêm measures riêng lẻ, format counts/rates/hours, tạo hai trang theo spec.
-4. Refresh và đối chiếu cả unfiltered counts lẫn cohort references; kiểm tra null owner, zero denominator, date/category/team filters và visual interactions.
-5. Save `powerbi/customer_support_analytics.pbix`, reopen và kiểm tra refresh. Capture/export thật hai trang vào `images/powerbi/`; chỉ thêm links vào README sau khi file thực tồn tại và đã kiểm thử.
+## Pages
 
-Không publish lên Power BI Service và không đổi sharing. Mẫu số capacity giữ theo actual handler/work date; category/priority chỉ filter ticket fact. Trong model, tạo labels rõ để tránh hiểu utilization là capacity riêng cho nhóm ticket đang chọn.
+1. Overview: volume, SLA compliance, backlog, CSAT
+2. SLA and demand: by priority, weekday and hour of day
+3. Workforce: tickets per agent, handling time, absence and shrinkage
+4. Customer experience: CSAT and reopen rate by month, category and channel
+5. Backlog and risk: how old the unresolved tickets are
+
+## Notes
+
+- Backlog is a snapshot of tickets unresolved on 1 Oct 2026, not a history.
+- Resolution SLA compliance = met / (met + breached). Pending tickets are left out of the denominator.
+- Ratios at team or total level are recomputed from counts, not averaged.
+- Drill-through and custom tooltips are not built.
+- I have not published to the Power BI Service. There is no `.pbip` version.

@@ -1,33 +1,24 @@
-# Customer Support Operations Analytics
+# Case study: where do support tickets break their SLA?
 
-**Python · MySQL · Excel · Power BI specification**
+**English** | [Tiếng Việt](portfolio_case_study.vi.md)
 
-## Bối cảnh / Context
+Synthetic data, so this shows method rather than business results.
 
-Support manager cần hiểu ticket demand, SLA và aged backlog trước khi điều chỉnh coverage. Case study dùng dữ liệu mô phỏng, không đại diện cho một doanh nghiệp hay kinh nghiệm vận hành thực tế.
+**Question.** A support manager wants to know which part of the operation is failing its SLA, how old the backlog is, and whether staffing lines up with demand.
 
-## Công việc đã thực hiện
+**What I did.**
+1. Checked the keys and grain of five tables, removed exact duplicates and put untrustworthy rows in a quarantine file instead of deleting them.
+2. Calculated KPIs in Python and SQL, then in DAX. I kept three things separate: who finally owned a ticket vs. who actually worked on it, a category's share of breaches vs. its own breach rate, and elapsed time vs. effort.
+3. Built a 5-page Power BI report and compared the main KPIs against an independent Python calculation.
 
-Tôi kiểm tra grain/key của 5 nguồn, tách exact duplicates khỏi ambiguous records, giữ quarantine và reconcile từng dòng. Pipeline tính KPI từ 14,774 retained tickets, tách final-owner outcomes khỏi actual-handler effort. SQL lưu logic phân tích; workbook trình bày KPI, charts, sample size và rules. Power BI hiện có M, model, DAX và filter acceptance references, chưa có native dashboard hoàn thành.
+**What it showed.**
+- Technical support is 29% of tickets but 50% of resolution breaches, and its team SLA is 63.6% vs about 81% for the others.
+- Weekday volume is 1.9x weekend volume.
+- 552 of 578 backlog tickets are older than 48 hours.
+- CSAT is 4.07 but only 52% of completed tickets have a rating.
 
-## Kết quả đáng trình bày
+**What I would suggest.** Look at the technical queue (hand-offs, priority mix) first; compare arrivals with handling timestamps before changing shifts; read CSAT together with its response rate. These are hypotheses to test, not claims of improvement.
 
-Technical chiếm 29.49% volume, 50.09% resolution breaches; rate trong Technical là 40.44%. Weekday average 46.90 ticket/ngày cao 1.92x weekend average 24.37. Backlog 578 ticket, 552 quá 48h tại snapshot. [Mẫu số và giới hạn](05_business_insights.md)
+**Limits.** The patterns were built into the simulation. Reopen rate is not first-contact resolution. Case mix is not adjusted. MySQL scripts were not run on a real server. Two time-based DAX measures were not independently checked.
 
-## Sản phẩm
-
-[Excel](../output/customer_support_analysis.xlsx) · [SQL](../sql/README.md) · [Data Quality](data_quality_report.md) · [Workbook previews](../images/workbook/README.md) · [Power BI package](../powerbi/README.md)
-
-![Tổng quan KPI trong workbook thực](../images/workbook/workbook_overview.png)
-
-Preview được render từ XLSX bằng Artifact Tool; chưa capture Excel native. Các KPI nói về synthetic data và snapshot cố định.
-
-![Demand trong workbook thực](../images/workbook/workbook_demand.png)
-
-Monthly demand hiển thị full coverage; dữ liệu tổng theo tháng không xác định hourly staffing.
-
-## Đề xuất và giới hạn
-
-Review technical handoff cùng priority mix; thử triage theo daily demand sau khi có handling timestamps; đọc CSAT cùng response rate. Đây là giả thuyết và đề xuất, không phải business achievements. Reopen Rate không phải FCR; daily FTE estimates không xác định exact shift gaps.
-
-[How to Run](how_to_run.md) và [5 câu hỏi phỏng vấn](interview_questions.md). Workspace không có repo website để sửa layout/mobile/build; bản này dùng để tích hợp sau. Không chỉnh website qua URL công khai.
+Links: [KPI definitions](kpi_definitions.md) · [data quality](data_quality_report.md) · [test report](test_report.md) · [Power BI](../powerbi/README.md) · [workbook](../output/customer_support_analysis.xlsx)
