@@ -19,6 +19,6 @@ Synthetic data, so this shows method rather than business results.
 
 **What I would suggest.** Look at the technical queue (hand-offs, priority mix) first; compare arrivals with handling timestamps before changing shifts; read CSAT together with its response rate. These are hypotheses to test, not claims of improvement.
 
-**Limits.** The patterns were built into the simulation. Reopen rate is not first-contact resolution. Case mix is not adjusted. MySQL scripts were not run on a real server. Two time-based DAX measures were not independently checked.
+**Limits.** The patterns were built into the simulation. Reopen rate is not first-contact resolution. Case mix is not adjusted. MySQL scripts run in CI on MySQL 8.4, not on a local server. Two time-based DAX measures were not independently checked.
 
 Links: [KPI definitions](kpi_definitions.md) · [data quality](data_quality_report.md) · [test report](test_report.md) · [Power BI](../powerbi/README.md) · [workbook](../output/customer_support_analysis.xlsx)

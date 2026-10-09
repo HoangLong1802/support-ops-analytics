@@ -43,4 +43,4 @@ Cleaning retains 14,774 tickets, 17,901 handling entries and 6,318 workforce row
 
 ## Known Limitations
 
-Synthetic relationships cannot establish real operational causes or forecast intervention benefits. A single snapshot cannot reconstruct backlog history, owner transfers or all customer contacts. Reopen Rate is not FCR. Resolution duration is not handling effort. Quarantine changes cohort coverage, and survey nonresponse limits CSAT comparisons. Daily capacity supports planning estimates, not exact hourly schedules. MySQL and Power BI require native execution before their outputs can be considered validated.
+Synthetic relationships cannot establish real operational causes or forecast intervention benefits. A single snapshot cannot reconstruct backlog history, owner transfers or all customer contacts. Reopen Rate is not FCR. Resolution duration is not handling effort. Quarantine changes cohort coverage, and survey nonresponse limits CSAT comparisons. Daily capacity supports planning estimates, not exact hourly schedules. MySQL outputs are checked in CI against Python; Power BI measures were checked in Desktop against Python.

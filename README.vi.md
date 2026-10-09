@@ -38,7 +38,7 @@ File báo cáo: [powerbi/customer_support_operations.pbix](powerbi/customer_supp
 
 Tôi tính lại các KPI chính bằng Python thuần và so với kết quả DAX. 19/21 kiểm tra khớp; hai measure theo thời gian (trung bình trượt 30 ngày, thay đổi theo tháng) chưa được tính lại độc lập. Xem [docs/test_report.md](docs/test_report.md).
 
-Các script MySQL đã viết nhưng chưa chạy trên MySQL server thật.
+Các script MySQL chạy trên GitHub Actions với MySQL 8.4 thật (xem badge phía trên); tôi chưa chạy trên MySQL cài local.
 
 ## Cách chạy
 

@@ -53,4 +53,4 @@ Snapshot: 01/10/2026 00:00 Asia/Ho_Chi_Minh = 30/09/2026 17:00 UTC. Events ở/b
 
 Ticket/date/owner filters là created cohort và final owner. Effort/capacity là work date và actual handler; category không tự filter workforce. Aggregate utilization là ratio of sums, không mean of percentages. Reopen Rate không phải FCR. Backlog fixed snapshot, không historical trend.
 
-SQL P90/P95 đã dùng inclusive linear interpolation giống pandas và DAX PERCENTILEX.INC. Native MySQL/M/DAX chưa chạy; static source review không phải native validation. Counts so exact, floats rtol=1e-12 và atol=1e-9; display round 2 decimals.
+SQL P90/P95 đã dùng inclusive linear interpolation giống pandas và DAX PERCENTILEX.INC. MySQL được kiểm chứng trong CI (MySQL 8.4); DAX được kiểm chứng trong Power BI Desktop. Counts so exact, floats rtol=1e-12 và atol=1e-9; display round 2 decimals.

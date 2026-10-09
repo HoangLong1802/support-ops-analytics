@@ -1,6 +1,6 @@
 # SQL / MySQL
 
-Chạy tại repository root theo thứ tự file đánh số 01 → 06. MySQL 8.0.16+; native execution chưa được kiểm thử trong phiên này.
+Chạy tại repository root theo thứ tự file đánh số 01 → 06. MySQL 8.0.16+. GitHub Actions chạy toàn bộ script trên MySQL 8.4 thật (workflow `mysql-validation.yml`) và đối chiếu 33 giá trị với Python.
 
 1. [Schema](01_data_model.sql)
 2. [Import processed CSV](../database/import.sql), chuẩn bị path bằng `python src/run_mysql.py --dry-run`

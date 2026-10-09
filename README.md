@@ -38,7 +38,7 @@ The report is in [powerbi/customer_support_operations.pbix](powerbi/customer_sup
 
 I recomputed the main KPIs in plain Python and compared them with the DAX results. 19 of 21 checks matched; two time-based measures (rolling 30-day average, month-over-month change) were not independently recomputed. See [docs/test_report.md](docs/test_report.md).
 
-The MySQL scripts are written but I have not run them against a real MySQL server.
+The MySQL scripts run in GitHub Actions on a MySQL 8.4 service container (see the badge above); I have not run them on a local MySQL server.
 
 ## Run it
 

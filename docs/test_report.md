@@ -34,7 +34,7 @@ Run date: 2026-10-09. Only tests that were executed are listed.
 
 ## Not executed / limitations
 - Refresh behaviour in Desktop (re-run of Power Query) was not re-tested this session.
-- SQL (MySQL) execution is BLOCKED: no MySQL client; SQL results are not part of this report.
+- SQL (MySQL) is not part of the Power BI tests above. It runs in GitHub Actions on MySQL 8.4 (workflow `mysql-validation.yml`, runs #1 and #2 succeeded); evidence is the `mysql-validation-output` artifact.
 - Visual interaction tests (cross-filter, drill-through, tooltips) not executed; pages 3–5 not yet built.
 - Data is synthetic (`docs/data_source.md`); results describe the simulated operation only.
 - The 13 new measures exist in the open Desktop session; the saved PBIX must be re-saved (Ctrl+S) to persist them.
