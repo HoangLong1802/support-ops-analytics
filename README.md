@@ -1,5 +1,7 @@
 # Support Operations Analytics
 
+[![MySQL Validation](https://github.com/HoangLong1802/support-ops-analytics/actions/workflows/mysql-validation.yml/badge.svg)](https://github.com/HoangLong1802/support-ops-analytics/actions/workflows/mysql-validation.yml)
+
 **English** | [Tiếng Việt](README.vi.md)
 
 A customer support analytics project: Python for cleaning, MySQL and Excel for analysis, and a five-page Power BI report on top. It looks at ticket demand, SLA performance, backlog, customer satisfaction and agent workload.

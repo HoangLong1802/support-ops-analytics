@@ -1,5 +1,7 @@
 # Phân tích vận hành Customer Support
 
+[![MySQL Validation](https://github.com/HoangLong1802/support-ops-analytics/actions/workflows/mysql-validation.yml/badge.svg)](https://github.com/HoangLong1802/support-ops-analytics/actions/workflows/mysql-validation.yml)
+
 [English](README.md) | **Tiếng Việt**
 
 Dự án phân tích vận hành hỗ trợ khách hàng: Python để làm sạch dữ liệu, MySQL và Excel để phân tích, và báo cáo Power BI 5 trang. Dự án xem xét lượng ticket, tuân thủ SLA, backlog, mức hài lòng của khách (CSAT) và khối lượng công việc của agent.
