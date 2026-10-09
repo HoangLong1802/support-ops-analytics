@@ -1,0 +1,113 @@
+{
+  "independent_validation": {
+    "status": "PASS",
+    "manual_samples": 5,
+    "bi_cohorts": 41,
+    "receipt": "output/independent_validation.json"
+  },
+  "mysql_execution_receipt": {
+    "status": "BLOCKED",
+    "database": "support_ops_verify_20261008_followup",
+    "client_version": null,
+    "server_version": null,
+    "scripts": [],
+    "reconciliation": {
+      "status": "NOT_RUN"
+    },
+    "commands": [],
+    "error": "mysql client unavailable: MYSQL_EXE unset and mysql not in PATH"
+  },
+  "date_local": "2026-10-08",
+  "data_type": "synthetic",
+  "raw_hashes_unchanged": true,
+  "processed_rules_violations": 0,
+  "workbook": {
+    "validation": "PASS",
+    "sheet_count": 14,
+    "kpis_matched": 42,
+    "numeric_tolerance": "rtol=1e-12; atol=1e-9; displayed rates rounded to 2 decimals",
+    "charts": 5
+  },
+  "workbook_sha256": "115b911b3bbd7c7bc5ba80f28b229959930f8149816a75d0edf334b0767409f1",
+  "portable_fallback": {
+    "validation": "PASS",
+    "sheet_count": 14,
+    "kpis_matched": 42,
+    "numeric_tolerance": "rtol=1e-12; atol=1e-9; displayed rates rounded to 2 decimals",
+    "charts": 5
+  },
+  "chart_value_sources": [
+    "'README'!$B$25:$B$27",
+    "'Demand_Analysis'!$B$5:$B$16",
+    "'SLA_Analysis'!$H$5:$H$7",
+    "'Backlog_Analysis'!$C$5:$C$10",
+    "'Team_Performance'!$F$5:$F$7"
+  ],
+  "kpi_contract_rows": 42,
+  "bi_reference_cases": 41,
+  "images": [
+    {
+      "path": "images/workbook/workbook_overview.png",
+      "size": [
+        1423,
+        568
+      ],
+      "bytes": 72998,
+      "sha256": "bd30ddaf710cd8402d9945cae98541aac12acea5eaaffed7917dc9d1097c0dcb",
+      "renderer": "Artifact Tool from actual XLSX; not native Excel capture"
+    },
+    {
+      "path": "images/workbook/workbook_demand.png",
+      "size": [
+        1647,
+        587
+      ],
+      "bytes": 101286,
+      "sha256": "d03930e16f03fca7ba580a257281e17fb1b415d9259cfdc14b43b1e3ece30c4a",
+      "renderer": "Artifact Tool from actual XLSX; not native Excel capture"
+    }
+  ],
+  "public_links_broken": [],
+  "pipeline": {
+    "log": "output\\pipeline_validation.txt",
+    "tests": 23,
+    "result": "OK"
+  },
+  "native_mysql": "BLOCKED before connection; actual runner exit 1; client unavailable; no server/Docker in checked paths/services; 3306 refused",
+  "native_excel": "NOT OPENED/CAPTURED; Excel executable exists; native inventory pipe unavailable (os error 2); no connected document session",
+  "native_powerbi": "NOT BUILT/OPENED; native inventory pipe unavailable; common paths absent, WindowsApps EPERM; M/DAX not executed",
+  "secrets_or_personal_fields_in_processed_schema": false,
+  "pushed": false,
+  "runtime": {
+    "python": "3.12.14",
+    "pandas": "3.0.1",
+    "numpy": "2.3.5"
+  },
+  "visual_review": {
+    "sheets_reviewed": 14,
+    "charts_reviewed": 5,
+    "issues_fixed": [
+      "date serial/truncated month labels",
+      "count precision",
+      "multi-table column width reset",
+      "text row height"
+    ],
+    "native_excel_capture": false,
+    "provenance": "Historical Artifact Tool review; follow-up did not open Excel native"
+  },
+  "recorded_regression": {
+    "log": "output/regression_validation.txt",
+    "tests": 31,
+    "result": "OK",
+    "final_targeted_tests": [
+      "output/independent_tests.txt",
+      "output/mysql/runner_unit_tests.txt"
+    ],
+    "note": "Regression and targeted suites executed separately; historical full pipeline had 23 tests"
+  },
+  "source_hygiene": {
+    "compile_exit": 0,
+    "git_diff_check_exit": 0,
+    "note": "Git only reports configured LF→CRLF normalization warnings"
+  }
+}

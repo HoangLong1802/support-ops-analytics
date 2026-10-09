@@ -1,11 +1,3 @@
-# Current plan
+Completed follow-up independent audit and 31-test regression; 6+2 final targeted tests OK. No KPI/scope expansion, raw regeneration, CV edit, commit/push/deploy.
 
-Completed analytical checkpoints: validated/frozen raw generation, quality assessment, reconciled cleaning/quarantine, Python KPIs/workforce analysis, recruiter-facing portfolio, real Excel output and processed-source Power BI specification. Historical validation: 23 passing tests; native SQL/M/DAX remain pending.
-
-## Completed continuity checkpoint
-PASS: be72f2982869a328483a6fa505a9f527d0ee0bd5 was pushed to the existing main remote. Rules/state/handoff/human review/plan and historical evidence are versioned; disposable dependencies, caches, secrets and duplicate archives remain ignored.
-
-A fresh GitHub clone with core.autocrlf=true passed all 23 existing tests and stayed clean. All 23 data hashes and the real workbook hash matched; ignore rules and secret-format/literal-credential checks passed. All 118 remote blobs matched the committed tree. Evidence: continuity_validation.json. A following documentation commit records this completed verification; use git log -1 for the current checkout.
-
-## Next analytical checkpoint
-Build/reconcile the genuine three-page Power BI report from processed CSVs; save the PBIX and real screenshots and push the validated checkpoint. Execute MySQL separately and answer HUMAN_REVIEW.md personally. No raw regeneration is needed to continue.
+Blocked native: MySQL missing client/server/Docker (actual runner exit 1, zero scripts); Computer Use inventory pipe missing, preventing Power BI/Excel opening. Exact evidence and user steps in docs/delivery_report.md, docs/sql_analysis_guide.md, powerbi/desktop_checklist.md, docs/excel_native_checklist.md. Native items remain unaccepted.

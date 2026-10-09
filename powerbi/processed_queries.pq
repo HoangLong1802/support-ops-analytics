@@ -2,7 +2,7 @@
 // Set ProjectFolder to your repository root; helper queries have Enable load off.
 
 // Query: ProjectFolder
-"I:\DA"
+"D:\Project\DA\support-ops-analytics"
 
 // Query: ReadProcessed
 (name as text, types as list) as table =>

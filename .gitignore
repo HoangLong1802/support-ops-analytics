@@ -38,3 +38,8 @@ Thumbs.db
 _backups/
 .agent/*.zip
 BACKUP_CHECKPOINTS.zip
+
+# Local Artifact Tool runtime and visual QA
+node_modules/
+.agent/qa/
+*.xlsx.inspect.ndjson

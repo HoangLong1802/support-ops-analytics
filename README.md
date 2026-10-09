@@ -1,92 +1,53 @@
 # Customer Support Operations Analytics
 
-This project compares support service outcomes with daily handling capacity. **All data is synthetic:** five sources cover 18 agents in three teams from October 2025 through September 2026. Cleaning retains 14,774 ticket snapshots for analysis.
+This case study examines support demand, service level agreement (SLA) outcomes, snapshot backlog, customer satisfaction and daily handling capacity. Five synthetic datasets cover eighteen agents in three teams from October 2025 to September 2026. Python validates and cleans the records, preserves exclusions in quarantine, and produces reproducible analytical outputs. MySQL scripts describe the same model and business questions. The Excel workbook contains measured results, definitions, cohort sample sizes and charts. The analysis separates final ticket ownership from actual handling, breach contribution from within-group breach rate, and elapsed resolution time from effort. These observations demonstrate analytical choices on simulated data and do not establish business impact. Power BI queries, DAX and acceptance references are included; native report completion is tracked separately.
 
-## Project Outputs
+## Tổng quan / Overview
 
-Open the [Excel analytical workbook](output/customer_support_analysis.xlsx): **14 sheets** expose executive KPIs, demand, SLA, categories, CSAT/reopens, backlog, agent/team outcomes, workforce utilization, staffing estimates, quality findings, cleaning and quarantine summaries. Four charts accompany verified results, definitions and sample sizes.
+Project giúp support manager đọc nhu cầu ticket, SLA breaches, aged backlog và workload/capacity trước khi điều chỉnh coverage. Tôi xây pipeline kiểm tra → cleaning/quarantine → KPI → SQL/Excel với **5 nguồn mô phỏng, 14,774 cleaned tickets**. [Nguồn và quyền sử dụng](docs/data_source.md)
 
-Power BI [data model](powerbi/data_model.md), [DAX measures](powerbi/measures.dax) and [dashboard specification](powerbi/dashboard_spec.md) are included. The final PBIX must be built manually in Power BI Desktop. **No PBIX or dashboard screenshots exist yet.** Target paths are `powerbi/customer_support_analytics.pbix` and `output/dashboard/`.
+## Sản phẩm / Deliverables
 
-## Business Problem
-
-Support managers need to locate weak service, SLA breach contributors, aged backlog and demand peaks, then compare workload with capacity before changing staffing.
-
-## Analytical Workflow
-
-```text
-Business Question → Raw Data → Data Quality Assessment → Cleaning Decisions
-    → Processed Data → SQL / Python Analysis → Excel Analytical Output
-    → Power BI Dashboard → Business Insights → Recommendations
-```
-
-Sources are tickets, work logs, daily workforce, agents and SLA policies. Quality checks distinguish repeated observations, ambiguous identities and impossible lifecycles from valid unusual cases. Cleaning produces reconciled processed and quarantine outputs; the model separates ticket outcomes from handling effort. Markdown explains why, Excel exposes measured results, and the prepared Power BI report shows how those results can support decisions visually.
-
-## Key Findings
-
-- **Technical cases merit the first review:** 29.49% of tickets contribute 50.09% of resolution SLA breaches, or 1,760 of 3,514. Investigate technical queues and dependency aging before increasing staffing across all teams.
-- **Resolution is the weaker service stage:** first-response compliance is 87.93%, versus 76.19% for resolution and 67.66% overall. Each component excludes its own pending cases.
-- **Demand is uneven:** average weekday arrivals are 1.92 times weekend arrivals; 35.70% arrive between 09:00 and 11:59 local time. Review triage availability, then validate handling timing.
-- **The mean hides long waits:** completed-ticket resolution averages 117.05 hours, versus a 6.22-hour median and 48.75-hour P95. Elapsed resolution includes waiting.
-- **Reopened tickets have lower respondent CSAT:** 3.74/5 versus 4.10/5 for tickets with no recorded reopen. Case mix and nonresponse limit interpretation.
-- **Backlog needs an aging review:** 552 of 578 unresolved tickets are older than 48 hours; 561 have breached resolution SLA. Confirm next actions and dependency owners.
-
-[Eight findings](docs/05_business_insights.md) pair evidence with recommendations and limitations. Synthetic associations do not establish causes; Reopen Rate is not FCR.
-
-## Data Quality Decisions
-
-| Data issue | Decision | Reason |
+| Sản phẩm | Mở ở đâu | Trạng thái |
 |---|---|---|
-| Exact duplicates | Remove 75 ticket copies and 36 log copies | Repeated observations inflate totals |
-| Channel formatting | Normalize 120 ticket rows | Case and spaces preserve meaning |
-| Conflicting ticket ID | Quarantine 60 versions across 30 IDs | No reliable canonical version |
-| Invalid CSAT | Set 23 scores to null | Preserve ticket facts without inventing a score |
-| Invalid lifecycle | Quarantine affected tickets | Service timing needs valid ordered events |
-| Unknown agent reference | Quarantine affected records | Ownership and capacity require known relationships |
-| Extreme duration | Keep logically valid records | Unusual waiting time alone is not an error |
+| SQL MySQL | [Schema, import, validation và analysis](sql/README.md) | Source hoàn chỉnh; chưa chạy native MySQL |
+| Excel | [customer_support_analysis.xlsx](output/customer_support_analysis.xlsx) | Workbook thực, 14 sheet; summary tĩnh, refresh bằng script |
+| Data Quality | [Báo cáo và reconciliation](docs/data_quality_report.md) | Tính từ dữ liệu trong repo |
+| Power BI | [M, DAX, model và hướng dẫn](powerbi/README.md) | Implementation package; chưa có PBIX/dashboard đã kiểm thử |
+| Ảnh workbook | [Preview và nguồn render](images/workbook/README.md) | Render trực tiếp XLSX bằng Artifact Tool; chưa capture trong Excel |
+| Portfolio | [Case study để tích hợp](docs/portfolio_case_study.md) | Việt/Anh, có evidence links |
 
-Every source row reconciles to a retained observation, redundant copy or quarantine entry. [Cleaning decisions](docs/03_cleaning_decisions.md) explain the full rules and impact; Excel provides the counts.
+## Câu hỏi phân tích / Business Questions
 
-## Data Model
+- Technical chiếm bao nhiêu volume, bao nhiêu breaches và có breach rate bao nhiêu trong chính nhóm?
+- Weekday demand khác weekend theo average daily arrivals như thế nào?
+- Backlog đã già đến mức nào; CSAT phản ánh bao nhiêu completed tickets?
+- Final-owner outcomes khác actual-handler workload ra sao?
 
-`fact_tickets` stores one ticket snapshot; `fact_work_logs` stores one ticket/actual-handler/local-date entry; `fact_workforce_daily` stores one agent/local date. Date, agent, category and SLA-policy dimensions support comparisons. Final ownership can differ from the handler, so outcome and effort facts stay separate to prevent duplicated totals.
+## Kết quả chính / Key Findings
 
-## SQL Analysis
+- **Technical:** 29.49% ticket volume, 50.09% resolution breaches; within-group breach rate **40.44%**. [Evidence](data/analytics/category_service_summary.csv)
+- **Demand:** weekday 46.90 ticket/ngày, weekend 24.37, ratio **1.92x**; mẫu số là 261 và 104 calendar days. [Evidence](data/analytics/demand_day_type.csv)
+- **SLA:** response compliance 87.93%, resolution 76.19%, overall 67.66%; mỗi KPI có eligible denominator riêng. [Definitions](docs/kpi_definitions.md)
+- **Backlog:** 552/578 ticket >48h tại snapshot; không phải historical backlog trend. [Analysis](sql/03_operations_analysis.sql)
+- **CSAT:** 4.07/5 từ 7,431 survey, response rate 52.35%. [Evidence](data/analytics/verified_kpis.csv)
 
-The [SQL files](sql/README.md) answer:
+[5 phát hiện và 3 đề xuất](docs/05_business_insights.md) phân biệt quan sát với giả thuyết. Simulation không chứng minh tác động kinh doanh; case mix và nonresponse giới hạn so sánh agent.
 
-- Which categories contribute disproportionately to resolution breaches?
-- When does demand peak?
-- How do duration and reopens relate to respondent CSAT?
-- Where is aged backlog concentrated?
-- Which teams carry the most workload relative to capacity?
-- How do owner outcomes differ with case mix and sample size?
+## Chất lượng dữ liệu / Data Quality
 
-CTEs, windows, LAG and ranking serve these questions. MySQL execution is pending; published evidence uses executed Python calculations.
+Từ 15,105 raw ticket rows, pipeline bỏ 75 exact copies, quarantine 256 rows và giữ 14,774 ticket. Chuẩn hóa 120 channel values, phục hồi 60 category từ subcategory xác định duy nhất, đặt 23 CSAT ngoài phạm vi thành null. Không điền missing timestamps, không bỏ valid long durations và không join unaggregated work logs vào ticket KPIs. [Báo cáo đầy đủ](docs/data_quality_report.md)
 
-## Power BI
+## Hướng dẫn chạy / How to Run
 
-Exactly three pages are specified: **Executive Overview**, **Operations Analysis**, and **Agent & Team Performance**. The model imports processed CSVs and derives service fields in Power Query. Excel is a presentation output and is not the BI source. M/DAX runtime reconciliation and real dashboard creation remain Desktop steps.
+Python 3.12+, pandas 3.x, NumPy 2.x và openpyxl 3.x. Không cần tạo lại raw.
 
-## Workforce Planning
-
-Work logs measure actual effort. Productive capacity equals schedule minus absence and shrinkage. Required FTE uses four prior matching weekdays, 374.4 productive minutes per FTE and an 85% utilization target; gap equals required minus available equivalent FTE. Observed aggregate utilization is 68.74%. This is daily planning, not exact scheduling or hourly staffing gaps.
-
-## Tools
-
-Python · pandas · NumPy · openpyxl / Excel output · MySQL / SQL · Power BI / DAX
-
-## Repository Guide
-
-Read [business context](docs/01_business_context.md), [data quality](docs/02_data_quality.md), [cleaning](docs/03_cleaning_decisions.md), [model](docs/04_data_model.md) and [insights](docs/05_business_insights.md). [Lineage](docs/data_lineage.md) connects the sources, analytical layers and deliverables.
-
-## Reproduce
-
-From the repository root, use Python 3.12+ in a virtual environment:
-
-```text
-python -m pip install -r requirements.txt
-python src/run_pipeline.py
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe src/run_pipeline.py
 ```
 
-This refreshes Excel and analytical outputs, validates sources and runs tests without changing raw data or this README. For Excel only, run `python src/export_excel.py`. Native steps: [SQL guide](docs/sql_analysis_guide.md) and [Power BI model](powerbi/data_model.md).
+[Hướng dẫn chi tiết và lỗi thường gặp](docs/how_to_run.md) · [KPI definitions](docs/kpi_definitions.md) · [Kiểm tra claim cũ](docs/claim_verification.md)
+
+Power BI và MySQL cần kiểm thử native riêng. Chưa có screenshot Power BI. Preview workbook ghi đúng nguồn render. [Trạng thái bàn giao](docs/delivery_report.md)

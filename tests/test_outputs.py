@@ -46,7 +46,7 @@ class OutputTests(unittest.TestCase):
     def test_workbook_is_real_complete_and_readable(self):
         self.assertTrue(self.path.is_file())
         self.assertEqual(self.workbook.sheetnames, SHEETS)
-        self.assertEqual(self.result["charts"], 4)
+        self.assertEqual(self.result["charts"], 5)
         for ws in self.workbook:
             self.assertTrue(ws.freeze_panes)
             self.assertTrue(ws.tables)
@@ -162,7 +162,7 @@ class OutputTests(unittest.TestCase):
             elif current and not line.lstrip().startswith("//"):
                 measures[current] += line
         expected = {
-            "Total Tickets": "COUNTROWS ( fact_tickets )",
+            "Total Tickets": "COALESCE ( COUNTROWS ( fact_tickets ), 0 )",
             "Completed Tickets": "CALCULATE ( [Total Tickets], fact_tickets[completed] = TRUE () )",
             "Open Tickets": "CALCULATE ( [Total Tickets], fact_tickets[status] = \"open\" )",
             "Pending Tickets": "CALCULATE ( [Total Tickets], fact_tickets[status] = \"pending\" )",

@@ -1,15 +1,14 @@
-# SQL Analysis
+# SQL / MySQL
 
-Read the model and shared definitions first, then follow the business questions in each analysis file.
+Chạy tại repository root theo [hướng dẫn SQL](../docs/sql_analysis_guide.md). MySQL 8.0.16+; native execution chưa được kiểm thử trong phiên này.
 
-| File | Business purpose |
-|---|---|
-| [01_data_model.sql](01_data_model.sql) | Separate ticket outcomes, actual handling effort and daily capacity; enforce dimensional keys |
-| [02_kpi_definitions.sql](02_kpi_definitions.sql) | Classify snapshot service outcomes and calculate the executive KPIs |
-| [03_operations_analysis.sql](03_operations_analysis.sql) | Locate demand peaks, breach contributions, long waits and aged backlog |
-| [04_customer_analysis.sql](04_customer_analysis.sql) | Compare survey participation, elapsed resolution, CSAT and reopens |
-| [05_workforce_analysis.sql](05_workforce_analysis.sql) | Compare handlers, capacity, final owners and case mix without duplicating facts |
+1. [Schema](01_data_model.sql)
+2. [Import processed CSV](../database/import.sql), chuẩn bị path bằng `python src/run_mysql.py --dry-run`
+3. [Views và KPI definitions](02_kpi_definitions.sql)
+4. [Validation](../database/validation.sql)
+5. [Operations](03_operations_analysis.sql)
+6. [Customer / CSAT](04_customer_analysis.sql)
+7. [Workforce / Staffing](05_workforce_analysis.sql)
+8. [Kiểm tra claim cũ](06_claim_verification.sql)
 
-All 23 existing business queries are retained in these files; additional cohort comparisons support the published insights. CTEs, LAG, rolling averages and rankings serve those questions rather than stand-alone syntax examples.
-
-**Status: reviewed source, not executed in MySQL.** Python exports provide the current measured results. [Import and validation steps](../docs/sql_analysis_guide.md) use `database/import.sql` and `database/validation.sql`; the former schema, views and analysis paths are compatibility entrypoints. Run SOURCE commands from the repository root.
+Grain: ticket snapshot; actual ticket/handler/date work log; agent/date capacity. Outcome/effort facts được aggregate riêng để không double-count. Query comments giải thích business question; run guide nêu denominator, cách đọc và giới hạn theo nhóm.

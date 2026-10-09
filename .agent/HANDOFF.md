@@ -1,51 +1,13 @@
 # Project Handoff
 
-## Current Status
-Python analysis, Markdown portfolio and real Excel output are validated. GitHub is the primary cross-machine recovery source. All synthetic data is committed; raw generation is already complete and frozen.
+Updated locally 2026-10-08. User forbids scope expansion/new KPIs, CV edits, push/deploy. No commit, push or publication performed. Preserve all existing local changes and frozen raw CSVs.
 
-## Last Completed Work
-Delivered the 14-sheet, 4-chart Excel workbook and processed-source BI specification. Versioned continuity files and historical evidence, pushed the checkpoint, then validated a fresh GitHub clone with Windows core.autocrlf=true.
+Completed: previous Python/Excel delivery (14 sheets, 5 charts, 42 KPIs), source/docs/claims, labeled Artifact Tool workbook renders. Historical full pipeline 23 tests OK.
 
-## Latest Validation
-23 unit tests passed from a fresh GitHub clone; all 42 Excel KPIs matched Python and saved exports. All 23 data artifact SHA256 values matched the pre-output baseline; the clone stayed clean. Evidence: continuity_validation.json, test_results.json, output_validation.json and output_baseline.json. Runtime: Python 3.12.13, pandas 3.0.6, NumPy 2.5.3, openpyxl 3.1.5. Native M/DAX/MySQL execution remains pending.
+Follow-up: independent stdlib csv/datetime oracle and hand-worked 5 retained raw tickets plus 1 invalid completed record. Full SLA/count/category/demand and 41 BI cohorts reconciled; join counterexample and zero-day perturbation tested. 6 new independent tests, 2 SQL runner safety/comparator tests. Full regression 31 tests OK; final targeted 6+2 OK. See docs/independent_validation.md and output/independent_validation.json (input hashes), output/regression_validation.txt. No raw or KPI scope changes.
 
-## Key KPI Results
-14,774 tickets; 14,196 completed; 578 backlog. First-response SLA 87.93%, resolution SLA 76.19%, overall SLA 67.66% (each excludes its own pending cases). CSAT 4.07/5 from 7,431 responses; Reopen Rate 8.35%; productive utilization 68.74%. Resolution mean 117.05 hours, median 6.22 hours, P95 48.75 hours. Reopen Rate is not FCR; elapsed resolution is not handling effort.
+MySQL actual runner call exit 1 before connection: client unavailable. PATH mysql/mysqld/docker absent, no matching service, 3306 ECONNREFUSED, checked common paths ENOENT. Dedicated database was NOT created; 0 scripts executed; versions null. Runner now refuses existing databases, restricts fresh support_ops_verify_* namespace, logs versions/commands/results, compares 33 existing values. See output/mysql/execution_receipt.json and docs/sql_analysis_guide.md. No SQL engine acceptance.
 
-## Files / Outputs
-Data: data/raw (5 CSVs), data/processed (5), data/quarantine (4), data/analytics (9 CSV/JSON artifacts). Generation/validation tools are in tools; analysis in src and tests; SQL in database and sql; reports in docs. Workbook: output/customer_support_analysis.xlsx (192,140 bytes; SHA256 3e76cc70f6fb052c336e0cda49996318518807eac72d4318a51f60e6a7d5deed).
+Native UI rechecked with current computer-use skill: sky.list_apps failed native pipe unavailable/file not found (os error 2). Excel executable exists, Power BI common paths absent and WindowsApps EPERM. No native window selected, no PBIX/M/DAX execution or Power BI/Excel screenshot. Power BI spec now exactly Operations Overview + SLA/Demand; existing Total Tickets DAX corrected for zero cohorts via COALESCE, not native-tested. Stepwise user handoff: powerbi/desktop_checklist.md and docs/excel_native_checklist.md.
 
-## Power BI Status
-SPEC ONLY. powerbi/processed_queries.pq, data_model.md, measures.dax and dashboard_spec.md are ready for Desktop implementation. No PBIX or screenshots. Use processed CSVs as the primary source and set ProjectFolder to the new clone location.
-
-## Git Status
-Repository: https://github.com/HoangLong1802/support-ops-analytics.git
-
-Current branch: main
-
-Latest commit at handoff update: be72f2982869a328483a6fa505a9f527d0ee0bd5 - checkpoint: preserve cross-machine project continuity
-
-Push status: PUSHED (all 118 remote blob hashes verified for that checkpoint).
-
-This record describes the last verified push when written. Use git log -1 --oneline and git status -sb for the current checkout, including the commit that saves this handoff. Do not treat historical publication JSON as live Git status.
-
-## Next Task
-On the home PC, clone this repository (or git pull --ff-only), read STATE.md and current_plan.md, then build and reconcile the genuine three-page Power BI report.
-
-Install Python 3.12+ and dependencies without copying this PC's temporary packages:
-
-```powershell
-git clone https://github.com/HoangLong1802/support-ops-analytics.git
-cd support-ops-analytics
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe .agent/verify_continuity.py
-.\.venv\Scripts\python.exe -m unittest discover -s tests -v
-```
-
-For intentional analytical refreshes use python src/run_pipeline.py in the environment. Do not run the raw stage or historical one-time scripts just to resume.
-
-## Manual Tasks Remaining
-1. In Power BI Desktop, create the named queries from processed_queries.pq, configure relationships, add measures and reconcile KPIs to data/analytics/verified_kpis.csv and Excel Executive_KPIs.
-2. Build the three specified pages; save powerbi/customer_support_analytics.pbix and real exports under output/dashboard/{executive_overview,operations_analysis,agent_team_performance}.png. Commit/push after validation; use Git LFS if the genuine PBIX exceeds GitHub's ordinary file limit.
-3. Execute/reconcile the MySQL scripts using docs/sql_analysis_guide.md. Answer HUMAN_REVIEW.md personally before presenting the portfolio.
+Resume native tasks on a supported interactive machine. Read docs/delivery_report.md first; don't claim implementation package/dashboard or workbook render/native screenshot interchangeably. Do not regenerate raw or replay historical .agent scripts.

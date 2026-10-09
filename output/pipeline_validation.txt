@@ -1,0 +1,185 @@
+test_backlog_buckets_and_each_segmentation_reconcile (test_outputs.OutputTests.test_backlog_buckets_and_each_segmentation_reconcile) ... ok
+test_capacity_and_insufficient_history_preserve_blanks (test_outputs.OutputTests.test_capacity_and_insufficient_history_preserve_blanks) ... ok
+test_dax_core_source_contract_matches_canonical_definitions (test_outputs.OutputTests.test_dax_core_source_contract_matches_canonical_definitions) ... ok
+test_demand_sections_reconcile_and_first_change_is_blank (test_outputs.OutputTests.test_demand_sections_reconcile_and_first_change_is_blank) ... ok
+test_every_excel_kpi_matches_python_and_saved_evidence (test_outputs.OutputTests.test_every_excel_kpi_matches_python_and_saved_evidence) ... ok
+test_export_preserves_every_data_artifact (test_outputs.OutputTests.test_export_preserves_every_data_artifact) ... ok
+test_owner_and_actual_handler_attribution_are_separate (test_outputs.OutputTests.test_owner_and_actual_handler_attribution_are_separate) ... ok
+test_sla_eligibility_and_zero_eligible_cohort (test_outputs.OutputTests.test_sla_eligibility_and_zero_eligible_cohort) ... ok
+test_workbook_is_real_complete_and_readable (test_outputs.OutputTests.test_workbook_is_real_complete_and_readable) ... ok
+test_category_pair_validation (test_pipeline.PipelineTests.test_category_pair_validation) ... ok
+test_clean_foreign_keys_and_all_contract_rules (test_pipeline.PipelineTests.test_clean_foreign_keys_and_all_contract_rules) ... ok
+test_exact_and_conflicting_duplicates_do_not_select_winners (test_pipeline.PipelineTests.test_exact_and_conflicting_duplicates_do_not_select_winners) ... ok
+test_future_events_and_completed_lifecycle_are_rejected (test_pipeline.PipelineTests.test_future_events_and_completed_lifecycle_are_rejected) ... ok
+test_generation_reproducibility_and_pristine_contract (test_pipeline.PipelineTests.test_generation_reproducibility_and_pristine_contract) ... ok
+test_independent_assessment_and_overlap_union (test_pipeline.PipelineTests.test_independent_assessment_and_overlap_union) ... ok
+test_kpi_export_denominators_and_outcome_partitions (test_pipeline.PipelineTests.test_kpi_export_denominators_and_outcome_partitions) ... ok
+test_legitimate_long_resolutions_are_retained (test_pipeline.PipelineTests.test_legitimate_long_resolutions_are_retained) ... ok
+test_productive_utilization_above_one_and_zero_capacity (test_pipeline.PipelineTests.test_productive_utilization_above_one_and_zero_capacity) ... ok
+test_quarantine_preserves_original_fields_and_dependent_links (test_pipeline.PipelineTests.test_quarantine_preserves_original_fields_and_dependent_links) ... ok
+test_safe_transformations_and_source_reconciliation (test_pipeline.PipelineTests.test_safe_transformations_and_source_reconciliation) ... ok
+test_sla_deadline_boundaries_and_missing_events (test_pipeline.PipelineTests.test_sla_deadline_boundaries_and_missing_events) ... ok
+test_staffing_forecasts_exclude_current_and_future_days (test_pipeline.PipelineTests.test_staffing_forecasts_exclude_current_and_future_days) ... ok
+test_work_logs_obey_lifecycle_hire_and_physical_attendance (test_pipeline.PipelineTests.test_work_logs_obey_lifecycle_hire_and_physical_attendance) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 71.634s
+
+OK
+Independent assessment complete: 13 findings; raw hashes unchanged
+{
+  "raw": {
+    "agents": 18,
+    "sla_policies": 16,
+    "tickets": 15105,
+    "ticket_work_logs": 18278,
+    "workforce_daily": 6327
+  },
+  "exact_copies_removed": {
+    "agents": 0,
+    "sla_policies": 0,
+    "tickets": 75,
+    "ticket_work_logs": 36,
+    "workforce_daily": 0
+  },
+  "transformations": {
+    "channel_normalized": 120,
+    "category_restored": 60,
+    "invalid_csat_set_null": 23,
+    "unique_transformed_ticket_rows": 203
+  },
+  "quarantined": {
+    "agents": 0,
+    "sla_policies": 0,
+    "tickets": 256,
+    "ticket_work_logs": 341,
+    "workforce_daily": 9
+  },
+  "processed": {
+    "agents": 18,
+    "sla_policies": 16,
+    "tickets": 14774,
+    "ticket_work_logs": 17901,
+    "workforce_daily": 6318
+  },
+  "reason_counts": {
+    "agents": {},
+    "sla_policies": {},
+    "tickets": {
+      "conflicting_key": 60,
+      "invalid_hierarchy": 60,
+      "completed_missing_fields": 38,
+      "missing_hierarchy": 60,
+      "unknown_owner": 15,
+      "response_order": 23
+    },
+    "ticket_work_logs": {
+      "unknown_ticket": 295,
+      "missing_workforce": 46,
+      "invalid_handling": 27
+    },
+    "workforce_daily": {
+      "invalid_capacity": 9
+    }
+  },
+  "validation": "PASS"
+}
+Clean schemas, rules, relationships, feasibility, reconciliation and immutable raw: PASS
+{
+  "total_tickets": 14774,
+  "completed_tickets": 14196,
+  "open_tickets": 282,
+  "pending_tickets": 296,
+  "average_first_response_minutes": 54.8903404860218,
+  "average_resolution_hours": 117.04776169343477,
+  "median_resolution_hours": 6.216666666666667,
+  "p90_resolution_hours": 29.733333333333334,
+  "p95_resolution_hours": 48.75,
+  "average_csat": 4.071457408155026,
+  "csat_responses": 7431,
+  "csat_response_rate": 0.5234573119188504,
+  "reopened_tickets": 1234,
+  "reopen_rate": 0.0835251116826858,
+  "backlog": 578,
+  "backlog_rate": 0.039122783267903076,
+  "weekday_weekend_ratio": 1.9247203548975313,
+  "handling_hours": 20183.716666666667,
+  "productive_capacity_hours": 29361.616666666665,
+  "utilization": 0.6874184380174343,
+  "median_team_day_utilization": 0.6862547851910763,
+  "fr_sla_met": 12990,
+  "fr_sla_breached": 1783,
+  "fr_sla_pending": 1,
+  "fr_sla_eligible": 14773,
+  "fr_sla_compliance": 0.8793068435659649,
+  "fr_breach_rate": 0.12069315643403507,
+  "resolution_sla_met": 11243,
+  "resolution_sla_breached": 3514,
+  "resolution_sla_pending": 17,
+  "resolution_sla_eligible": 14757,
+  "resolution_sla_compliance": 0.7618757199972894,
+  "resolution_breach_rate": 0.23812428000271058,
+  "overall_sla_met": 9986,
+  "overall_sla_breached": 4772,
+  "overall_sla_pending": 16,
+  "overall_sla_eligible": 14758,
+  "overall_sla_compliance": 0.6766499525680987,
+  "overall_breach_rate": 0.3233500474319013,
+  "backlog_over_24_hours": 559,
+  "backlog_over_48_hours": 552,
+  "backlog_over_72_hours": 549
+}
+Daily staffing estimates: 1,095 rows; 1,011 with four prior matching weekdays
+BI tables and eight verified insights refreshed; editorial README preserved; KPI agreement and raw hashes: PASS
+{
+  "technical": {
+    "category": "technical_support",
+    "tickets": 4357,
+    "ticket_share": 0.2949099769865981,
+    "resolution_eligible": 4352,
+    "resolution_breaches": 1760,
+    "resolution_breach_share": 0.5008537279453614,
+    "resolution_breach_rate": 0.40441176470588236
+  },
+  "day_types": [
+    {
+      "day_type": "Weekday",
+      "tickets": 12240,
+      "calendar_days": 261,
+      "zero_ticket_days": 0,
+      "average_daily_tickets": 46.89655172413793
+    },
+    {
+      "day_type": "Weekend",
+      "tickets": 2534,
+      "calendar_days": 104,
+      "zero_ticket_days": 0,
+      "average_daily_tickets": 24.365384615384617
+    }
+  ],
+  "join_counts": [
+    14774,
+    14774,
+    14774
+  ],
+  "raw_unchanged": true
+}
+{"kind":"notice","message":"Cell search matched 0 entries."}
+{"kind":"table","sheet":"README","address":"A4:C13","rows":10,"cols":3,"values":[["Metric","Value","Unit / Scope"],["Total Tickets",14774,"ticket; unique ID"],["Resolution SLA Compliance %",0.761875719997289,"MET / eligible"],["FR SLA Compliance %",0.879306843565965,"MET / eligible"],["Backlog Count",578,"open + pending"],["Backlog >48 Hours",552,"ticket; age >48h"],["Average CSAT",4.071457408155026,"score /5; respondents"],["CSAT Response Rate %",0.52345731191885,"valid CSAT / completed"],["Weekday / Weekend Average Arrivals",1.924720354897531,"ratio; calendar days"],[null,null,null]]}
+Inspect result written to file: D:\Project\DA\support-ops-analytics\output\customer_support_analysis.xlsx.inspect.ndjson
+Workbook exported: 14 sheets, 5 native charts; static analytical results.
+
+{
+  "workbook": "D:\\Project\\DA\\support-ops-analytics\\output\\customer_support_analysis.xlsx",
+  "validation": "PASS",
+  "sheet_count": 14,
+  "kpis_matched": 42,
+  "numeric_tolerance": "rtol=1e-12; atol=1e-9; displayed rates rounded to 2 decimals",
+  "charts": 5
+}
+{"kind":"notice","message":"Cell search matched 0 entries."}
+{"kind":"table","sheet":"README","address":"A4:C13","rows":10,"cols":3,"values":[["Metric","Value","Unit / Scope"],["Total Tickets",14774,"ticket; unique ID"],["Resolution SLA Compliance %",0.761875719997289,"MET / eligible"],["FR SLA Compliance %",0.879306843565965,"MET / eligible"],["Backlog Count",578,"open + pending"],["Backlog >48 Hours",552,"ticket; age >48h"],["Average CSAT",4.071457408155026,"score /5; respondents"],["CSAT Response Rate %",0.52345731191885,"valid CSAT / completed"],["Weekday / Weekend Average Arrivals",1.924720354897531,"ratio; calendar days"],[null,null,null]]}
+Inspect result written to file: C:\Users\longt\AppData\Local\Temp\tmpzz4khzio\analysis.xlsx.inspect.ndjson
+Workbook exported: 14 sheets, 5 native charts; static analytical results.
+
+Python workflow complete. MySQL and Power BI require separate native-tool validation.

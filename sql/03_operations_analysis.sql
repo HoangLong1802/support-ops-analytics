@@ -66,8 +66,14 @@ WITH durations AS (
 )
 SELECT measure,AVG(duration) AS mean,
  AVG(CASE WHEN rn IN (FLOOR((n+1)/2),FLOOR((n+2)/2)) THEN duration END) AS median,
- MAX(CASE WHEN rn=CEIL(n*.90) THEN duration END) AS p90_nearest_rank,
- MAX(CASE WHEN rn=CEIL(n*.95) THEN duration END) AS p95_nearest_rank,
+ MAX(CASE WHEN rn=FLOOR(1+(n-1)*.90) THEN duration END)
+ + (MAX(1+(n-1)*.90)-FLOOR(MAX(1+(n-1)*.90))) *
+   (MAX(CASE WHEN rn=CEIL(1+(n-1)*.90) THEN duration END)
+    -MAX(CASE WHEN rn=FLOOR(1+(n-1)*.90) THEN duration END)) AS p90_linear,
+ MAX(CASE WHEN rn=FLOOR(1+(n-1)*.95) THEN duration END)
+ + (MAX(1+(n-1)*.95)-FLOOR(MAX(1+(n-1)*.95))) *
+   (MAX(CASE WHEN rn=CEIL(1+(n-1)*.95) THEN duration END)
+    -MAX(CASE WHEN rn=FLOOR(1+(n-1)*.95) THEN duration END)) AS p95_linear,
  MAX(duration) AS maximum FROM ordered GROUP BY measure;
 
 -- What does the snapshot backlog contain?
@@ -76,9 +82,10 @@ SELECT status,priority,COUNT(*) AS backlog,AVG(backlog_age_minutes)/60 AS averag
 FROM vw_ticket_service_metrics WHERE NOT completed GROUP BY status,priority;
 
 -- How old is backlog at the fixed snapshot? These are not historical backlog trends.
-SELECT CASE WHEN backlog_age_minutes<=1440 THEN '01 <=24h'
- WHEN backlog_age_minutes<=2880 THEN '02 24-48h'
- WHEN backlog_age_minutes<=4320 THEN '03 48-72h' ELSE '04 >72h' END AS age_band,
+SELECT CASE WHEN backlog_age_minutes<1440 THEN '01 <24h'
+ WHEN backlog_age_minutes<2880 THEN '02 24-48h'
+ WHEN backlog_age_minutes<4320 THEN '03 48-72h' WHEN backlog_age_minutes<10080 THEN '04 3-7 days'
+ WHEN backlog_age_minutes<43200 THEN '05 7-30 days' ELSE '06 30+ days' END AS age_band,
  COUNT(*) AS backlog FROM vw_ticket_service_metrics WHERE NOT completed GROUP BY age_band ORDER BY age_band;
 
 -- How does demand change week over week? Flag partial boundary weeks.

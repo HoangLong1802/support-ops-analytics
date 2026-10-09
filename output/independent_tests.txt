@@ -1,0 +1,11 @@
+test_all_existing_bi_cohorts_independent (test_independent.IndependentTests.test_all_existing_bi_cohorts_independent) ... ok
+test_calendar_zero_day_perturbation_against_live_pipeline (test_independent.IndependentTests.test_calendar_zero_day_perturbation_against_live_pipeline) ... ok
+test_frozen_hand_calculations_against_live_pipeline (test_independent.IndependentTests.test_frozen_hand_calculations_against_live_pipeline) ... ok
+test_independent_full_aggregate_against_live_pipeline (test_independent.IndependentTests.test_independent_full_aggregate_against_live_pipeline) ... ok
+test_join_counterexample_and_safe_grain (test_independent.IndependentTests.test_join_counterexample_and_safe_grain) ... ok
+test_missing_completed_resolution_is_excluded (test_independent.IndependentTests.test_missing_completed_resolution_is_excluded) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 4.140s
+
+OK

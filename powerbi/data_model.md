@@ -45,3 +45,21 @@ Acceptance in Desktop: after refresh, confirm 14,774 tickets, 17,901 work logs a
 
 The timezone preparation uses explicit [SwitchZone / RemoveZone operations](https://learn.microsoft.com/en-us/powerquery-m/datetimezone-functions); source parsing uses [Csv.Document](https://learn.microsoft.com/en-us/powerquery-m/csv-document). These references describe the functions, not validation of this unexecuted model.
 
+
+## Sơ đồ model / Model diagram
+
+```mermaid
+flowchart LR
+  D["dim_date · 1 date"] -->|"1:* single · creation date"| T["fact_tickets · 1 ticket"]
+  D -->|"1:* single · work date"| L["fact_work_logs · 1 actual handler entry"]
+  D -->|"1:* single · work date"| W["fact_workforce_daily · 1 agent/day"]
+  A["dim_agents · 1 agent"] -->|"1:* single · final owner"| T
+  A -->|"1:* single · actual handler"| L
+  A -->|"1:* single · capacity agent"| W
+  C["dim_categories · 1 category/subcategory"] -->|"1:* single"| T
+  P["dim_sla_policies · 1 policy"] -->|"1:* single"| T
+```
+
+Sơ đồ là model specification, chưa phải ảnh model đã mở trong Desktop. Không có active fact-to-fact relationship. SQL có FK parent checks, BI dùng TREATAS khi cần selected-ticket effort. Null unresolved owner được giữ ở ticket fact; cần xác nhận blank member behavior trong Desktop.
+
+Quan trọng: Total Tickets, Resolution SLA Breach %, Resolution Breach Share %, CSAT Response Rate %, Backlog >48 Hours, Utilization %, Weekday Weekend Average Ratio. Thêm từng measure từ measures.dax. All và cohort expected values nằm trong acceptance_reference.json; chưa phải M/DAX execution results.

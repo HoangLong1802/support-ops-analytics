@@ -1,35 +1,56 @@
-# KPI Definitions and Cross-Tool Review
+# Định nghĩa KPI / KPI Definitions
 
-The executed reference is [verified_metrics.py](../src/verified_metrics.py), with values in [verified_kpis.csv](../data/analytics/verified_kpis.csv). [The Excel export](../src/export_excel.py) reuses those functions and validates every Executive_KPIs value. [SQL definitions](../sql/02_kpi_definitions.sql) implement the same snapshot rules. [Power Query](../powerbi/processed_queries.pq) derives service fields from processed CSVs; [DAX](../powerbi/measures.dax) aggregates them.
+Nguồn thực thi: [verified_metrics.py](../src/verified_metrics.py); [42 giá trị](../data/analytics/verified_kpis.csv) và [machine-readable contract](../data/analytics/kpi_contract.csv). Excel là summary tĩnh được export lại bằng pipeline.
 
-| KPI | Common definition | Unfiltered Python result |
-|---|---|---:|
-| First Response SLA | MET / (MET + BREACHED); component PENDING excluded | 12,990 / 14,773 = 87.93% |
-| Resolution SLA | MET / (MET + BREACHED); component PENDING excluded | 11,243 / 14,757 = 76.19% |
-| Overall SLA | MET / (MET + BREACHED); overall PENDING excluded | 9,986 / 14,758 = 67.66% |
-| Reopen Rate | Tickets with reopen_count > 0 / retained tickets | 1,234 / 14,774 = 8.35% |
-| CSAT response rate | Completed tickets with valid CSAT / completed tickets | 7,431 / 14,196 = 52.35% |
-| Backlog | Open + pending tickets at the fixed snapshot | 282 + 296 = 578 |
-| Handling | Sum of retained work-log handling_minutes; divide by 60 for hours | 20,183.72 hours |
-| Productive capacity | Sum of scheduled − absence − shrinkage; divide by 60 for hours | 29,361.62 hours |
-| Utilization | Total handling / total productive capacity; null at zero capacity | 68.74% |
+SLA là cam kết mức dịch vụ theo từng policy; CSAT là điểm hài lòng 1–5. Median là trung vị; P95 là phân vị 95% trên completed durations. Elapsed resolution gồm waiting, khác handling effort. Productive capacity là scheduled time trừ absence và shrinkage (thời gian không xử lý ticket như họp/training). FTE là equivalent full-time capacity, không phải số người cần tuyển.
 
-## Snapshot and boundary rules
+Snapshot: 01/10/2026 00:00 Asia/Ho_Chi_Minh = 30/09/2026 17:00 UTC. Events ở/before target là MET; missing event quá deadline là BREACHED, còn lại PENDING. Overall breach khi một component breach; MET khi completed và cả hai MET. PENDING outcome khác ticket status pending.
 
-Snapshot: **2026-10-01 00:00 Asia/Ho_Chi_Minh**, equivalent to **2026-09-30 17:00 UTC**. Event durations compare UTC instants; local dates and arrival hours use the reporting timezone.
+| KPI / ý nghĩa | Tử số / phép tính | Mẫu số | Bộ lọc | Thời gian | Đơn vị | Null / chưa đủ điều kiện |
+|---|---|---|---|---|---|---|
+| Total Tickets — Quy mô ticket | COUNT(unique retained ticket_id) | — | Tất cả retained tickets | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Key thiếu/ambiguous không vào processed |
+| Completed Tickets — Ticket đã hoàn tất | COUNT(ticket) | — | status resolved/closed | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Completed thiếu events bị quarantine |
+| Open Tickets — Ticket trạng thái open | COUNT(ticket) | — | status open | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Không dùng SLA pending làm ticket status |
+| Pending Tickets — Ticket trạng thái pending | COUNT(ticket) | — | status pending | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Không dùng SLA pending làm ticket status |
+| Average First Response Minutes — Thời gian đến phản hồi đầu | SUM(first_response elapsed minutes) | N observed responses | first_response_at not null | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | minute | Loại thiếu event; không điền zero |
+| Average Resolution Hours — Thời gian elapsed đến hoàn tất, gồm waiting | SUM(resolution elapsed hours) | N completed observed durations | completed tickets | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | hour | Loại unresolved; giữ valid long tails |
+| Median Resolution Hours — Phân phối elapsed resolution, gồm waiting | median trên danh sách completed durations; inclusive linear interpolation | — | completed, observed duration | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | hour | Bỏ unresolved/missing; không bỏ valid long tails |
+| P90 Resolution Hours — Phân phối elapsed resolution, gồm waiting | p90 trên danh sách completed durations; inclusive linear interpolation | — | completed, observed duration | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | hour | Bỏ unresolved/missing; không bỏ valid long tails |
+| P95 Resolution Hours — Phân phối elapsed resolution, gồm waiting | p95 trên danh sách completed durations; inclusive linear interpolation | — | completed, observed duration | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | hour | Bỏ unresolved/missing; không bỏ valid long tails |
+| Average CSAT — Mức hài lòng người trả lời | SUM(valid scores) | N valid responses | completed, csat 1–5 | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | score /5 | Null/invalid không phải zero |
+| CSAT Responses — Số survey hợp lệ | COUNT(valid CSAT) | — | completed, csat 1–5 | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | response | Không đếm null/invalid |
+| CSAT Response Rate % — Participation trong completed cohort | N completed valid CSAT | N completed tickets | completed | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | fraction / % | Zero denominator → blank; null score không đếm tử số |
+| Reopened Tickets — Ticket có ghi nhận reopen | COUNT(ticket) | — | reopen_count >0 | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Không suy đoán FCR |
+| Reopen Rate % — Tỷ lệ ticket từng reopen | N reopen_count >0 | N retained tickets | all retained | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | fraction / % | Zero denominator → blank; không phải FCR |
+| Backlog Count — Unresolved tại snapshot | N open + pending | — | unresolved | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Không suy dựng historical backlog |
+| Backlog % — Tỷ trọng unresolved | N backlog | N retained tickets | all retained | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | fraction / % | Zero denominator → blank |
+| Weekday / Weekend Average Arrivals — Tỷ số average daily demand | Weekday tickets / weekday calendar days | Weekend tickets / weekend calendar days | Calendar đủ 365 ngày theo contract | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ratio | Giữ zero-ticket days; zero weekend average → blank |
+| Handling Hours — Effort actual handlers | SUM(work_log handling_minutes) | 60 | Retained work logs theo work date/handler | Work dates 01/10/2025–30/09/2026 | hour | Không dùng elapsed resolution làm effort |
+| Productive Capacity Hours — Capacity sau absence/shrinkage | SUM(scheduled−absence−shrinkage) | 60 | Retained workforce agent/date | Work dates 01/10/2025–30/09/2026 | hour | Không tự điền 9 quarantined workforce days |
+| Utilization % — Effort / productive capacity | SUM(handling minutes) | SUM(productive minutes) | Actual handler/work dates | Work dates 01/10/2025–30/09/2026 | fraction / % | Zero capacity → blank; có thể >100% |
+| Median Team-Day Utilization % — Median tỷ lệ từng team-day | Median(team-day handling / productive) | — | Team-day có productive >0 | Work dates 01/10/2025–30/09/2026 | fraction / % | Loại zero capacity; khác ratio of sums |
+| First Response SLA Met — First Response MET | N MET | — | First Response snapshot outcome | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Missing event: age >target → breach; age <=target → pending |
+| First Response SLA Breached — First Response BREACHED | N BREACHED | — | First Response snapshot outcome | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Missing event: age >target → breach; age <=target → pending |
+| First Response SLA Pending — First Response PENDING | N PENDING | — | First Response snapshot outcome | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Missing event: age >target → breach; age <=target → pending |
+| First Response SLA Eligible — First Response ELIGIBLE | N MET + BREACHED | — | First Response snapshot outcome | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Missing event: age >target → breach; age <=target → pending |
+| First Response SLA Compliance % — First Response tuân thủ SLA | N MET | N MET + N BREACHED | Component eligible | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | fraction / % | PENDING loại riêng; zero denominator → blank |
+| First Response SLA Breach % — First Response vi phạm SLA | N BREACHED | N MET + N BREACHED | Component eligible | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | fraction / % | PENDING loại riêng; zero denominator → blank |
+| Resolution SLA Met — Resolution MET | N MET | — | Resolution snapshot outcome | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Missing event: age >target → breach; age <=target → pending |
+| Resolution SLA Breached — Resolution BREACHED | N BREACHED | — | Resolution snapshot outcome | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Missing event: age >target → breach; age <=target → pending |
+| Resolution SLA Pending — Resolution PENDING | N PENDING | — | Resolution snapshot outcome | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Missing event: age >target → breach; age <=target → pending |
+| Resolution SLA Eligible — Resolution ELIGIBLE | N MET + BREACHED | — | Resolution snapshot outcome | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Missing event: age >target → breach; age <=target → pending |
+| Resolution SLA Compliance % — Resolution tuân thủ SLA | N MET | N MET + N BREACHED | Component eligible | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | fraction / % | PENDING loại riêng; zero denominator → blank |
+| Resolution SLA Breach % — Resolution vi phạm SLA | N BREACHED | N MET + N BREACHED | Component eligible | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | fraction / % | PENDING loại riêng; zero denominator → blank |
+| Overall SLA Met — Overall MET | N MET | — | Overall snapshot outcome | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Missing event: age >target → breach; age <=target → pending |
+| Overall SLA Breached — Overall BREACHED | N BREACHED | — | Overall snapshot outcome | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Missing event: age >target → breach; age <=target → pending |
+| Overall SLA Pending — Overall PENDING | N PENDING | — | Overall snapshot outcome | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Missing event: age >target → breach; age <=target → pending |
+| Overall SLA Eligible — Overall ELIGIBLE | N MET + BREACHED | — | Overall snapshot outcome | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Missing event: age >target → breach; age <=target → pending |
+| Overall SLA Compliance % — Overall tuân thủ SLA | N MET | N MET + N BREACHED | Component eligible | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | fraction / % | PENDING loại riêng; zero denominator → blank |
+| Overall SLA Breach % — Overall vi phạm SLA | N BREACHED | N MET + N BREACHED | Component eligible | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | fraction / % | PENDING loại riêng; zero denominator → blank |
+| Backlog >24 Hours — Unresolved age strictly >24h | COUNT(ticket) | — | unresolved và snapshot age >24h | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Nested thresholds, không cộng thành tổng |
+| Backlog >48 Hours — Unresolved age strictly >48h | COUNT(ticket) | — | unresolved và snapshot age >48h | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Nested thresholds, không cộng thành tổng |
+| Backlog >72 Hours — Unresolved age strictly >72h | COUNT(ticket) | — | unresolved và snapshot age >72h | Creation cohort 01/10/2025–30/09/2026; snapshot 01/10/2026 00:00 UTC+7 | ticket | Nested thresholds, không cộng thành tổng |
 
-An observed event at or before its target is MET. An event beyond its target is BREACHED. If the event is missing, snapshot age strictly beyond target is BREACHED; age at or below target is PENDING. Overall is BREACHED if either component breaches, MET only if the ticket is completed and both components are MET, and otherwise PENDING.
+Ticket/date/owner filters là created cohort và final owner. Effort/capacity là work date và actual handler; category không tự filter workforce. Aggregate utilization là ratio of sums, không mean of percentages. Reopen Rate không phải FCR. Backlog fixed snapshot, không historical trend.
 
-PENDING is an SLA outcome, distinct from the ticket's `pending` status. An unresolved overdue ticket remains SLA-eligible as a breach. Each component has its own denominator.
-
-## Capacity and filter scope
-
-Productive capacity differs from physical attendance: attendance subtracts absence only. Handling may exceed productive time while remaining within physical attendance, so utilization can exceed 100%. Aggregate utilization is a ratio of sums, not a mean of individual percentages.
-
-Ticket outcome filters use creation cohorts and final owners. Workload/capacity filters use work dates and actual handlers. Category/channel/priority do not filter workforce capacity. Comparing selected-ticket effort to total agent/day capacity requires an explicit scope label.
-
-## Review status
-
-Python tests cover deadline equality, missing events, outcome partitions, denominators, backlog and zero capacity. Output tests reopen the workbook, compare its full-precision values with Python/saved KPIs, and inspect the core DAX source contract. That static check verifies definitions and dependencies; **it does not execute DAX**. M, SQL and DAX native runtime reconciliation remains pending. Workbook comparisons allow 1e-9 absolute numeric tolerance and 1e-12 relative tolerance; percent displays round to two decimals without changing the stored fractions.
-
-SQL duration P90/P95 uses nearest rank, while pandas uses linear interpolation. That documented estimator difference is retained; counts and KPI rates must match. Reopen Rate is not FCR, and no handling measure uses elapsed resolution duration.
+SQL P90/P95 đã dùng inclusive linear interpolation giống pandas và DAX PERCENTILEX.INC. Native MySQL/M/DAX chưa chạy; static source review không phải native validation. Counts so exact, floats rtol=1e-12 và atol=1e-9; display round 2 decimals.

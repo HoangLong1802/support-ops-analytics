@@ -1,19 +1,13 @@
 # Project state
 
-## Completed checkpoints
-PASS: validated synthetic raw generation, data quality assessment, reconciled cleaning/quarantine, Python analysis and workforce planning, recruiter-facing Markdown/SQL/BI specifications, and real Excel analytical output. The rejected initial build was archived before controlled regeneration; its reported PASS was not reused.
+Updated locally 2026-10-08. User forbids scope expansion/new KPIs, CV edits, push/deploy. No commit, push or publication performed. Preserve all existing local changes and frozen raw CSVs.
 
-Raw data is frozen. The five SHA256 values in data/analytics/generation_metadata.json are authoritative. All 23 data artifacts still match .agent/output_baseline.json from before Excel delivery.
+Completed: previous Python/Excel delivery (14 sheets, 5 charts, 42 KPIs), source/docs/claims, labeled Artifact Tool workbook renders. Historical full pipeline 23 tests OK.
 
-## Latest validation
-Executed: 23 unit tests passed again from a fresh GitHub clone with Windows core.autocrlf=true; the clone stayed clean. All 42 workbook KPIs matched Python and saved exports, with 14 sheets and 4 charts. Data and workbook hashes survived checkout unchanged. Evidence: .agent/continuity_validation.json, .agent/test_results.json and .agent/output_validation.json. Validated runtime: Python 3.12.13, pandas 3.0.6, NumPy 2.5.3, openpyxl 3.1.5.
+Follow-up: independent stdlib csv/datetime oracle and hand-worked 5 retained raw tickets plus 1 invalid completed record. Full SLA/count/category/demand and 41 BI cohorts reconciled; join counterexample and zero-day perturbation tested. 6 new independent tests, 2 SQL runner safety/comparator tests. Full regression 31 tests OK; final targeted 6+2 OK. See docs/independent_validation.md and output/independent_validation.json (input hashes), output/regression_validation.txt. No raw or KPI scope changes.
 
-Native MySQL, Power Query/M and DAX execution remain unvalidated. No genuine PBIX or dashboard screenshots exist. Static source checks do not establish native execution.
+MySQL actual runner call exit 1 before connection: client unavailable. PATH mysql/mysqld/docker absent, no matching service, 3306 ECONNREFUSED, checked common paths ENOENT. Dedicated database was NOT created; 0 scripts executed; versions null. Runner now refuses existing databases, restricts fresh support_ops_verify_* namespace, logs versions/commands/results, compares 33 existing values. See output/mysql/execution_receipt.json and docs/sql_analysis_guide.md. No SQL engine acceptance.
 
-## Continuity checkpoint
-GitHub is the primary recovery source: https://github.com/HoangLong1802/support-ops-analytics, branch main. Continuity checkpoint be72f2982869a328483a6fa505a9f527d0ee0bd5 (checkpoint: preserve cross-machine project continuity) was pushed and tested from a remote clone; all 118 remote blob hashes matched the committed tree. The following documentation commit saves the validation receipt and this handoff update.
+Native UI rechecked with current computer-use skill: sky.list_apps failed native pipe unavailable/file not found (os error 2). Excel executable exists, Power BI common paths absent and WindowsApps EPERM. No native window selected, no PBIX/M/DAX execution or Power BI/Excel screenshot. Power BI spec now exactly Operations Overview + SLA/Demand; existing Total Tickets DAX corrected for zero cohorts via COALESCE, not native-tested. Stepwise user handoff: powerbi/desktop_checklist.md and docs/excel_native_checklist.md.
 
-Versioned rules, state, handoff, human review, plan and historical evidence are included alongside source, all synthetic data layers and the real workbook. Disposable dependencies, caches, secrets and duplicate archives remain ignored; local ZIPs are secondary and are not required on another machine. Read .agent/HANDOFF.md and .agent/current_plan.md to resume; git log -1 identifies the current checkout, including commits that update these records.
-
-## Next checkpoint
-Build and reconcile the genuine three-page report in Power BI Desktop from data/processed, then save the PBIX and real screenshots and push that checkpoint. Native MySQL execution and personal interview answers remain manual tasks.
+Resume native tasks on a supported interactive machine. Read docs/delivery_report.md first; don't claim implementation package/dashboard or workbook render/native screenshot interchangeably. Do not regenerate raw or replay historical .agent scripts.

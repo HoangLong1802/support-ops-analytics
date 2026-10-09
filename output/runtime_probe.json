@@ -1,0 +1,98 @@
+[
+  {
+    "command": [
+      "C:/Windows/System32/where.exe",
+      [
+        "mysql"
+      ]
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "INFO: Could not find files for the given pattern(s).\r\n"
+  },
+  {
+    "command": [
+      "C:/Windows/System32/where.exe",
+      [
+        "mysqld"
+      ]
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "INFO: Could not find files for the given pattern(s).\r\n"
+  },
+  {
+    "command": [
+      "C:/Windows/System32/where.exe",
+      [
+        "docker"
+      ]
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "INFO: Could not find files for the given pattern(s).\r\n"
+  },
+  {
+    "command": [
+      "C:/Program Files/Docker/Docker/resources/bin/docker.exe",
+      [
+        "version"
+      ]
+    ],
+    "status": null,
+    "error": "spawnSync C:/Program Files/Docker/Docker/resources/bin/docker.exe ENOENT"
+  },
+  {
+    "command": [
+      "C:/Windows/System32/sc.exe",
+      [
+        "query",
+        "type=",
+        "service",
+        "state=",
+        "all"
+      ]
+    ],
+    "status": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "locations": [
+      {
+        "path": "C:/Program Files/MySQL",
+        "error": "ENOENT"
+      },
+      {
+        "path": "C:/Program Files/Docker",
+        "error": "ENOENT"
+      },
+      {
+        "path": "C:/Program Files/Microsoft Power BI Desktop",
+        "error": "ENOENT"
+      },
+      {
+        "path": "C:/Program Files (x86)/MySQL",
+        "error": "ENOENT"
+      },
+      {
+        "path": "C:/Program Files (x86)/Microsoft Power BI Desktop",
+        "error": "ENOENT"
+      },
+      {
+        "path": "C:/Users/longt/AppData/Local/Programs",
+        "exists": true,
+        "entries": []
+      },
+      {
+        "path": "C:/Users/longt/AppData/Local/Microsoft/WindowsApps",
+        "error": "EPERM"
+      },
+      {
+        "path": "C:/Program Files/Microsoft Office/root/Office16/EXCEL.EXE",
+        "exists": true
+      }
+    ],
+    "localhost_3306": "ECONNREFUSED"
+  }
+]

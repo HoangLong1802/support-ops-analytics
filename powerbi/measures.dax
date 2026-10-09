@@ -1,5 +1,6 @@
 // Add each definition as a measure. Format ratios as percentages.
-Total Tickets = COUNTROWS ( fact_tickets )
+// Return zero for empty ticket cohorts; calendar-day denominators remain selected coverage.
+Total Tickets = COALESCE ( COUNTROWS ( fact_tickets ), 0 )
 Completed Tickets = CALCULATE ( [Total Tickets], fact_tickets[completed] = TRUE () )
 Open Tickets = CALCULATE ( [Total Tickets], fact_tickets[status] = "open" )
 Pending Tickets = CALCULATE ( [Total Tickets], fact_tickets[status] = "pending" )
@@ -82,3 +83,13 @@ Selected Ticket Handling Hours =
 VAR TicketsInCohort = VALUES ( fact_tickets[ticket_id] )
 RETURN CALCULATE ( [Handling Hours], TREATAS ( TicketsInCohort, fact_work_logs[ticket_id] ) )
 
+
+// Day-type denominators retain selected date coverage, including zero-ticket days.
+Weekday Tickets = CALCULATE ( [Total Tickets], KEEPFILTERS ( dim_date[is_weekend] = FALSE () ) )
+Weekend Tickets = CALCULATE ( [Total Tickets], KEEPFILTERS ( dim_date[is_weekend] = TRUE () ) )
+Weekday Calendar Days = CALCULATE ( [Calendar Days], KEEPFILTERS ( dim_date[is_weekend] = FALSE () ) )
+Weekend Calendar Days = CALCULATE ( [Calendar Days], KEEPFILTERS ( dim_date[is_weekend] = TRUE () ) )
+Weekday Average Daily Tickets = DIVIDE ( [Weekday Tickets], [Weekday Calendar Days] )
+Weekend Average Daily Tickets = DIVIDE ( [Weekend Tickets], [Weekend Calendar Days] )
+Weekday Weekend Average Ratio = DIVIDE ( [Weekday Average Daily Tickets], [Weekend Average Daily Tickets] )
+Weekday Weekend Total Ratio = DIVIDE ( [Weekday Tickets], [Weekend Tickets] )

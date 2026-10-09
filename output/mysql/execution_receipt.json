@@ -1,0 +1,12 @@
+{
+  "status": "BLOCKED",
+  "database": "support_ops_verify_20261008_followup",
+  "client_version": null,
+  "server_version": null,
+  "scripts": [],
+  "reconciliation": {
+    "status": "NOT_RUN"
+  },
+  "commands": [],
+  "error": "mysql client unavailable: MYSQL_EXE unset and mysql not in PATH"
+}

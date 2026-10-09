@@ -1,68 +1,57 @@
-# Data quality report
+# Chất lượng dữ liệu / Data Quality
 
-Five synthetic operational sources are profiled before any cleaning. Checks use source records, the approved schema and business rules. Optional lifecycle timestamps and CSAT nulls are profiled separately from contract errors.
+Dữ liệu mô phỏng, kỳ 01/10/2025–30/09/2026 theo Asia/Ho_Chi_Minh. Raw giữ nguyên. Missing hợp lệ được giữ theo lifecycle, không điền timestamp hoặc CSAT bằng mean/zero.
 
-Workflow: understand grain → profile values → validate rules → check relationships → classify impact → recommend treatment.
+## Grain và reconciliation
 
-## Source profiles
+| Dataset | Key / grain | Raw | Exact copies removed | Quarantine | Processed |
+|---|---|---:|---:|---:|---:|
+| agents | agent_id | 18 | 0 | 0 | 18 |
+| sla_policies | policy_id | 16 | 0 | 0 | 16 |
+| tickets | ticket_id | 15,105 | 75 | 256 | 14,774 |
+| ticket_work_logs | work_log_id | 18,278 | 36 | 341 | 17,901 |
+| workforce_daily | agent_id, work_date | 6,327 | 0 | 9 | 6,318 |
 
-| Dataset | Key/grain | Rows | Columns | Missing cells | Exact copies | Key unique | Unique affected rows |
-|---|---|---:|---:|---:|---:|---|---:|
-| agents | agent_id | 18 | 3 | 0 | 0 | True | 0 |
-| sla_policies | policy_id | 16 | 5 | 0 | 0 | True | 0 |
-| tickets | ticket_id | 15,105 | 14 | 8,273 | 75 | False | 534 |
-| ticket_work_logs | work_log_id | 18,278 | 5 | 0 | 36 | False | 101 |
-| workforce_daily | agent_id, work_date | 6,327 | 5 | 0 | 0 | True | 9 |
+Mỗi raw row đi vào retained, redundant copy hoặc quarantine. Transformations không phải nhóm cộng thêm; 203 ticket được sửa một hoặc nhiều trường.
 
-Missing cells above include legitimate optional values; they are not counts of invalid rows. Unique affected rows use the union of rule masks rather than the sum of overlapping issues.
+## Kiểm tra và cách xử lý
 
-## Issue registry
+| Kiểm tra | Kết quả / số dòng ảnh hưởng | Cách xử lý | Vấn đề còn lại |
+|---|---|---|---|
+| tickets.exact_duplicate | 75 source rows | Bỏ bản sao nguyên vẹn, giữ một observation | Tách khỏi conflicting versions |
+| tickets.conflicting_key | 60 source rows | Quarantine tất cả phiên bản ambiguous | Không có update timestamp để chọn winner |
+| tickets.missing_hierarchy | 120 source rows | Phục hồi category nếu subcategory xác định duy nhất; còn lại quarantine | 60 restored category, 60 ambiguous rows |
+| tickets.invalid_hierarchy | 60 source rows | Quarantine nếu vi phạm contract; kiểm tra downstream logs | Reason counts có thể chồng lấp; distinct totals ở reconciliation |
+| tickets.channel_format | 120 source rows | Trim và lowercase | 120 ticket được chuẩn hóa |
+| tickets.unknown_owner | 15 source rows | Quarantine nếu vi phạm contract; kiểm tra downstream logs | Reason counts có thể chồng lấp; distinct totals ở reconciliation |
+| tickets.response_order | 23 source rows | Quarantine nếu vi phạm contract; kiểm tra downstream logs | Reason counts có thể chồng lấp; distinct totals ở reconciliation |
+| tickets.completed_missing_fields | 38 source rows | Quarantine nếu vi phạm contract; kiểm tra downstream logs | Reason counts có thể chồng lấp; distinct totals ở reconciliation |
+| tickets.invalid_csat | 23 source rows | Đặt score ngoài 1–5 thành null; giữ ticket | 23 score không tham gia CSAT |
+| ticket_work_logs.exact_duplicate | 36 source rows | Bỏ bản sao nguyên vẹn, giữ một observation | Tách khỏi conflicting versions |
+| ticket_work_logs.unknown_ticket | 65 source rows | Quarantine nếu vi phạm contract; kiểm tra downstream logs | Reason counts có thể chồng lấp; distinct totals ở reconciliation |
+| ticket_work_logs.invalid_handling | 27 source rows | Quarantine nếu vi phạm contract; kiểm tra downstream logs | Reason counts có thể chồng lấp; distinct totals ở reconciliation |
+| workforce_daily.invalid_capacity | 9 source rows | Quarantine nếu vi phạm contract; kiểm tra downstream logs | Reason counts có thể chồng lấp; distinct totals ở reconciliation |
+| Processed schema/types/domains/time/FKs/capacity | 0 violations | Validate contract trên retained data | Không chứng minh tính đại diện của simulation |
+| Ticket → policy join | 14,774 trước / 14,774 sau; 0 missing targets | many_to_one, left join | Không join raw logs vào ticket counts |
+| Ticket → owner join | 14,774 trước / 14,774 sau; 0 unknown non-null owner | Giữ legitimate null owners cho unresolved cases | Final owner khác actual handler |
+| Calendar coverage | 365 ngày; 0 zero-ticket days | Calendar từ simulation contract; giữ ngày zero trong denominator | Sau quarantine thiếu 9 workforce agent-days |
 
-Secondary field counts exclude exact copies and conflicting-key records to avoid duplicated diagnoses. Conflicting-key counts include every ambiguous version.
+## Missing values
 
-| Dataset | Issue | Rows | % of raw rows | Severity | Impact | Treatment |
-|---|---|---:|---:|---|---|---|
-| tickets | exact_duplicate | 75 | 0.50% | HIGH | Repeated records inflate volume or effort. | AUTO-FIX |
-| tickets | conflicting_key | 60 | 0.40% | CRITICAL | Identity is ambiguous; joins cannot select a reliable version. | QUARANTINE |
-| tickets | missing_hierarchy | 120 | 0.79% | HIGH | Unknown demand categories affect routing and mix reporting. | REVIEW |
-| tickets | invalid_hierarchy | 60 | 0.40% | HIGH | Contract violation can distort service, workload or relationship reporting. | QUARANTINE |
-| tickets | channel_format | 120 | 0.79% | LOW | Formatting splits channel groups without changing their meaning. | AUTO-FIX |
-| tickets | unknown_owner | 15 | 0.10% | HIGH | Contract violation can distort service, workload or relationship reporting. | QUARANTINE |
-| tickets | response_order | 23 | 0.15% | CRITICAL | Contract violation can distort service, workload or relationship reporting. | QUARANTINE |
-| tickets | completed_missing_fields | 38 | 0.25% | CRITICAL | Completed lifecycle lacks evidence needed for service metrics. | QUARANTINE |
-| tickets | invalid_csat | 23 | 0.15% | MEDIUM | Out-of-domain scores bias satisfaction. | AUTO-FIX |
-| ticket_work_logs | exact_duplicate | 36 | 0.20% | HIGH | Repeated records inflate volume or effort. | AUTO-FIX |
-| ticket_work_logs | unknown_ticket | 65 | 0.36% | HIGH | Handling refers to a missing or ambiguous ticket. | QUARANTINE |
-| ticket_work_logs | invalid_handling | 27 | 0.15% | HIGH | Contract violation can distort service, workload or relationship reporting. | QUARANTINE |
-| workforce_daily | invalid_capacity | 9 | 0.14% | CRITICAL | Invalid productive capacity distorts utilization and staffing. | QUARANTINE |
+| Trường | Raw missing cells | Cách xử lý |
+|---|---:|---|
+| tickets.category | 90 | Áp dụng missing_required / missing_hierarchy |
+| tickets.subcategory | 60 | Áp dụng missing_required / missing_hierarchy |
+| tickets.first_response_at | 1 | Cho phép thiếu khi chưa có event/survey; kiểm tra theo status |
+| tickets.resolved_at | 632 | Cho phép thiếu khi chưa có event/survey; kiểm tra theo status |
+| tickets.csat_score | 7,490 | Cho phép thiếu khi chưa có event/survey; kiểm tra theo status |
 
-## Types, domains and relationships
+## Ảnh hưởng và vấn đề còn lại
 
-Validation includes timestamp/date parsing, integer domains, category/subcategory pairs, policy/channel/priority agreement, agent hire dates, ticket lifecycle, workforce composite keys and handling against physical attendance. String casing is measured before normalization. Completed tickets require owner, response and resolution; unresolved tickets cannot contain resolution or CSAT.
+Completed tickets phải có owner, response và resolution. Unresolved tickets không được có resolution hoặc CSAT. Không suy dựng lịch sử trạng thái từ snapshot hiện tại.
 
-### Date coverage
+Quarantine: 256 ticket, 341 work log, 9 workforce row. Log reason counts là 295 unknown_ticket, 46 missing_workforce và 27 invalid_handling; chồng lấp nên không cộng thành distinct rows. Raw chỉ có 65 unknown_ticket, phần tăng sau cleaning do parent tickets bị loại.
 
-Active-agent calendar pairs expected: 6,327; missing: 0; extra: 0. Off days are present with zero minutes; pre-hire dates are outside coverage.
+Giữ logically valid long durations; mean resolution vì vậy lớn hơn median. Quarantine làm đổi case mix và capacity quan sát. Null CSAT không phải score 0; nonresponse giới hạn diễn giải. Kiểm tra tự động không đánh giá được mức simulation đại diện doanh nghiệp.
 
-## Statistical observations
-
-Logical errors are excluded from duration profiling. Long valid records remain statistical observations and are retained.
-
-| Measure | N | Median | P90 | P95 | P99 | Maximum |
-|---|---:|---:|---:|---:|---:|---:|
-| First response minutes | 14,908 | 18.00 | 143.00 | 220.00 | 469.93 | 1931.00 |
-| Resolution minutes | 14,322 | 373.00 | 1786.80 | 2925.00 | 260887.80 | 506509.00 |
-| Snapshot backlog age minutes | 587 | 143878.05 | 350436.97 | 392356.55 | 455481.10 | 506168.53 |
-| Handling minutes per entry | 18,215 | 57.00 | 127.00 | 159.00 | 223.00 | 375.00 |
-
-## Integrity evidence
-
-Raw SHA256 before and after assessment: identical.
-
-| File | SHA256 |
-|---|---|
-| agents.csv | 42a9c17ee4a3a69a9fa7869a9cb6fe529a35e512847830714a7cd582b27ff89d |
-| sla_policies.csv | 54dcbf5887fe5237776eb5465407349983dc622ad122c2cbc2792272721acde8 |
-| tickets.csv | 8fe7a644d3d21e18fc8df4be6d381640af2fce11cf13412215d5dc9dc2a025a6 |
-| ticket_work_logs.csv | 1f427ed46af6f95ddd060c2d4a4721c1ddb8040a31a2588dc70c0f6d00c57efa |
-| workforce_daily.csv | 40a666c87c3083c1544fdaed881ecaddd2766d1c6eb8240c8f2ba78fb1a483ac |
+Bằng chứng: [contract](../src/contract.py), [cleaner](../src/clean_data.py), [quality audit](../data/analytics/quality_audit.json), [cleaning audit](../data/analytics/cleaning_audit.json), [quarantine](../data/quarantine/).

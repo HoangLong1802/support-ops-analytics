@@ -2,11 +2,16 @@
 from pathlib import Path
 import json
 import math
+import os
+import shutil
+import subprocess
+import tempfile
 import numpy as np
 import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.chart import BarChart, LineChart, Reference
 from openpyxl.styles import Alignment, Font, PatternFill
+from openpyxl.formatting.rule import ColorScaleRule
 from openpyxl.worksheet.table import Table, TableStyleInfo
 from contract import ROOT, DAYS, SNAPSHOT, ZONE, hashes, read_tables, validation_errors
 from verified_metrics import ratio, summarize, ticket_metrics, workforce_metrics
@@ -104,6 +109,7 @@ def demand_sections(tickets):
     daily = tickets.groupby("local_created_date").size().reindex(DAYS, fill_value=0)
     monthly = daily.groupby(daily.index.to_period("M")).sum()
     trend = pd.DataFrame({"Period": monthly.index.to_timestamp().date, "Ticket_Count": monthly.values})
+    trend["Month"] = pd.to_datetime(trend.Period).dt.strftime("%b%y")
     trend["Previous_Period"] = trend.Period.shift(1)
     trend["Previous_Ticket_Count"] = trend.Ticket_Count.shift(1)
     trend["Change"] = trend.Ticket_Count - trend.Previous_Ticket_Count
@@ -303,18 +309,31 @@ def workbook_sections(data, kpis):
         "Quarantine_Summary": "Overlapping exclusion reasons; source denominators, no raw dump",
     }
     intro = pd.DataFrame([
-        ("Project", "Customer Support Operations Analytics"), ("Dataset", "Synthetic customer-support operations data"),
+        ("Project", "Customer Support Operations Analytics"), ("Dataset", "Dữ liệu vận hành support mô phỏng"),
         ("Workflow", "Raw → Quality → Cleaning → Analysis → Excel → Power BI → Insights"),
         ("Reporting timezone", ZONE), ("Snapshot", str(SNAPSHOT.tz_convert(ZONE))),
-        ("Analytical source", "data/processed/ plus verified results in data/analytics/. Excel is a presentation output, not a BI source."),
-        ("Limitations", "Synthetic data; reopen != FCR; snapshot backlog only; resolution != handling; daily capacity; staffing is an estimate; noncausal comparisons."),
-        ("Units / blanks", "Rates are 0–1 fractions displayed as percentages. Missing/zero-denominator values are blank. Values are exported results, not unexplained formulas."),
+        ("Analytical source", "Nguồn: data/processed/ và kết quả data/analytics/. Excel là sản phẩm trình bày; Power BI đọc processed CSV."),
+        ("Limitations", "Dữ liệu mô phỏng; Reopen Rate không phải FCR; backlog chỉ tại snapshot; elapsed resolution không phải effort; capacity theo ngày; staffing là ước tính; không kết luận nhân quả."),
+        ("Units / blanks", "Rates lưu dạng fraction 0–1, hiển thị %. Null hoặc mẫu số 0 để trống. Các giá trị là kết quả Python đã export, không phải công thức Excel hoặc PivotTable."),
         ("Attribution", "Ticket outcomes: final owner. Effort: actual handler. Handled_Tickets is distinct within each agent/team and is not additive across handlers."),
         ("Backlog boundaries", "Age buckets are half-open: 24–48h means 24 <= age < 48. KPI >48h uses strictly greater than 48, as defined in the project."),
         ("Refresh", "python src/export_excel.py"),
     ], columns=["Field", "Value"])
     return {
-        "README": [("Project scope", intro), ("Workbook guide", pd.DataFrame(list(descriptions.items()), columns=["Sheet", "Contents"]))],
+        "README": [("KPI Overview / Tổng quan", pd.DataFrame([
+            ("Total Tickets", kpis["total_tickets"], "ticket; unique ID"),
+            ("Resolution SLA Compliance %", kpis["resolution_sla_compliance"], "MET / eligible"),
+            ("FR SLA Compliance %", kpis["fr_sla_compliance"], "MET / eligible"),
+            ("Backlog Count", kpis["backlog"], "open + pending"),
+            ("Backlog >48 Hours", kpis["backlog_over_48_hours"], "ticket; age >48h"),
+            ("Average CSAT", kpis["average_csat"], "score /5; respondents"),
+            ("CSAT Response Rate %", kpis["csat_response_rate"], "valid CSAT / completed"),
+            ("Weekday / Weekend Average Arrivals", kpis["weekday_weekend_ratio"], "ratio; calendar days")
+            ], columns=["Metric", "Value", "Unit / Scope"])),
+            ("SLA compliance", pd.DataFrame([("First Response", kpis["fr_sla_compliance"]),
+                ("Resolution", kpis["resolution_sla_compliance"]), ("Overall", kpis["overall_sla_compliance"])], columns=["Stage", "Compliance_Rate"])),
+            ("Workbook guide", pd.DataFrame(list(descriptions.items()), columns=["Sheet", "Contents"])),
+            ("Project scope / Phạm vi", intro)],
         "Executive_KPIs": [("Verified KPI values", executive_rows(kpis))],
         "Demand_Analysis": demand_sections(tickets), "SLA_Analysis": [("Snapshot SLA by cohort", sla_rows(tickets))],
         "Category_Analysis": [("Category and subcategory", categories)], "CSAT_Reopen": csat_sections,
@@ -341,7 +360,7 @@ def number_format(column):
     return "#,##0"
 
 
-def write_workbook(path, sections, descriptions):
+def legacy_write_workbook(path, sections, descriptions):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     locations = {}
@@ -366,7 +385,7 @@ def write_workbook(path, sections, descriptions):
                 ws.row_dimensions[header].height = 34
                 for column, name in enumerate(frame.columns, start=1):
                     width = 70 if name in {"Definition", "Value", "Contents", "Business_Impact", "Reason", "Analytical_Impact", "Recommended_Action"} else min(30, max(16, len(name) + 2))
-                    ws.column_dimensions[ws.cell(header, column).column_letter].width = width
+                    ws.column_dimensions[ws.cell(header, column).column_letter].width = max(width, ws.column_dimensions[ws.cell(header, column).column_letter].width)
                     for cells in ws.iter_rows(min_row=header + 1, max_row=header + len(frame), min_col=column, max_col=column):
                         cell = cells[0]
                         cell.font = Font(name="Calibri", size=11)
@@ -375,11 +394,13 @@ def write_workbook(path, sections, descriptions):
                 for excel_row in range(header + 1, header + len(frame) + 1):
                     lines = max((math.ceil(len(str(cell.value)) / max(10, ws.column_dimensions[cell.column_letter].width - 2))
                                  for cell in ws[excel_row] if isinstance(cell.value, str)), default=1)
-                    ws.row_dimensions[excel_row].height = min(100, max(18, lines * 15))
+                    ws.row_dimensions[excel_row].height = min(360, max(18, lines * 15))
                 locations[(sheet, title)] = (header, header + len(frame), list(frame.columns))
                 if index == 0:
                     ws.freeze_panes = f"A{header + 1}"
                 row = header + len(frame) + 2
+                if sheet == "README" and index == 0:
+                    row = 22
             ws.sheet_view.showGridLines = False
             ws.cell(1, 1, "Scope").font = Font(name="Calibri", bold=True)
             scope = descriptions[sheet]
@@ -394,7 +415,7 @@ def write_workbook(path, sections, descriptions):
         ws.column_dimensions["A"].width, ws.column_dimensions["B"].width, ws.column_dimensions["C"].width = 38, 22, 80
         for row in range(header + 1, last + 1):
             metric = ws.cell(row, 1).value
-            decimal = any(word in metric for word in ["Hours", "Minutes", "Average CSAT", "Average Arrivals"])
+            decimal = not metric.startswith("Backlog") and any(word in metric for word in ["Hours", "Minutes", "Average CSAT", "Average Arrivals"])
             ws.cell(row, 2).number_format = "0.00%" if "%" in metric else ("#,##0.00" if decimal else "#,##0")
         guide = writer.sheets["README"]
         first, last, _ = locations[("README", "Workbook guide")]
@@ -402,10 +423,11 @@ def write_workbook(path, sections, descriptions):
             cell = guide.cell(row, 1)
             cell.hyperlink = f"#'{cell.value}'!A1"
             cell.font = Font(name="Calibri", color="0563C1", underline="single")
-        charts = [("Demand_Analysis", "Monthly ticket trend", "Monthly arrivals", "Period", "Ticket_Count", "K3", True),
+        charts = [("README", "SLA compliance", "SLA compliance tại snapshot", "Stage", "Compliance_Rate", "F4", False),
+                  ("Demand_Analysis", "Monthly ticket trend", "Monthly arrivals", "Month", "Ticket_Count", "I3", True),
                   ("SLA_Analysis", "Snapshot SLA by cohort", "Overall-cohort SLA compliance", "SLA_Type", "Compliance_Rate", "M3", False),
-                  ("Backlog_Analysis", "Age Bucket", "Snapshot backlog by age", "Segment", "Backlog_Count", "K3", False),
-                  ("Team_Performance", "Ownership and actual team effort", "Observed team utilization", "Team", "Utilization", "AC3", False)]
+                  ("Backlog_Analysis", "Age Bucket", "Snapshot backlog by age", "Segment", "Backlog_Count", "H3", False),
+                  ("Team_Performance", "Ownership and actual team effort", "Observed team utilization", "Team", "Utilization", "V3", False)]
         for sheet, title, chart_title, category, value, anchor, line in charts:
             ws = writer.sheets[sheet]
             first, last, columns = locations[(sheet, title)]
@@ -420,7 +442,42 @@ def write_workbook(path, sections, descriptions):
             if value in {"Utilization", "Compliance_Rate"}:
                 chart.y_axis.numFmt = "0%"
             ws.add_chart(chart, anchor)
+        for sheet, ref in [("SLA_Analysis", "I5:I55"), ("Staffing_Analysis", "I5:I1099")]:
+            writer.sheets[sheet].conditional_formatting.add(ref, ColorScaleRule(start_type="min", start_color="EEF4F7", end_type="max", end_color="C54D4D"))
+        overview = writer.sheets["README"]
+        for column, width in [("A",35),("B",24),("C",38)]:
+            overview.column_dimensions[column].width = width
+        for row in overview.iter_rows():
+            lines = max((math.ceil(len(str(c.value)) / max(10, overview.column_dimensions[c.column_letter].width - 2)) for c in row if isinstance(c.value,str)), default=1)
+            overview.row_dimensions[row[0].row].height = max(25,min(360,lines*17))
+        for row in range(5,13):
+            label = overview.cell(row,1).value
+            overview.cell(row,2).number_format = "0.00%" if "%" in label else ("#,##0.00" if any(x in label for x in ["Average CSAT","Weekday"]) else "#,##0")
 
+
+
+def write_workbook(path, sections, descriptions):
+    """Use Artifact Tool when available; retain portable openpyxl fallback."""
+    node = os.environ.get("NODE_EXE") or shutil.which("node")
+    try:
+        available = node and subprocess.run([node, "--input-type=module", "-e", "await import('@oai/artifact-tool')"], cwd=ROOT, capture_output=True).returncode == 0
+    except OSError:
+        available = False
+    if not available:
+        return legacy_write_workbook(path, sections, descriptions)
+    payload = {"sections": {name: [{"title": title, "columns": list(frame.columns),
+                  "rows": json.loads(frame.to_json(orient="values", date_format="iso", double_precision=15))}
+                  for title, frame in tables] for name, tables in sections.items()}}
+    with tempfile.TemporaryDirectory() as temp:
+        spec_path = Path(temp) / "workbook.json"
+        spec_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+        args = [node, str(ROOT / "src/workbook_builder.mjs"), str(spec_path), str(Path(path).resolve())]
+        if Path(path).resolve() == OUTPUT.resolve():
+            args += [str(ROOT / "images/workbook")]
+        result = subprocess.run(args, cwd=ROOT, capture_output=True, text=True, encoding="utf-8")
+        if result.returncode:
+            raise RuntimeError(result.stdout + result.stderr)
+        print(result.stdout)
 
 def validate_workbook(path, kpis):
     workbook = load_workbook(path, data_only=False)

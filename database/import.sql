@@ -33,24 +33,24 @@ INSERT INTO dim_categories(category_key,category,subcategory) VALUES
 ('service_request|cancellation','service_request','cancellation')
 ON DUPLICATE KEY UPDATE category=VALUES(category),subcategory=VALUES(subcategory);
 
-LOAD DATA LOCAL INFILE 'I:/DA/data/processed/agents_clean.csv'
+LOAD DATA LOCAL INFILE '__PROJECT_ROOT__/data/processed/agents_clean.csv'
 INTO TABLE dim_agents FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n' IGNORE 1 LINES (agent_id,team,hire_date);
 SHOW WARNINGS;
 
-LOAD DATA LOCAL INFILE 'I:/DA/data/processed/sla_policies_clean.csv'
+LOAD DATA LOCAL INFILE '__PROJECT_ROOT__/data/processed/sla_policies_clean.csv'
 INTO TABLE dim_sla_policies FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n' IGNORE 1 LINES
 (policy_id,channel,priority,first_response_target_minutes,resolution_target_minutes);
 SHOW WARNINGS;
 
-LOAD DATA LOCAL INFILE 'I:/DA/data/processed/workforce_daily_clean.csv'
+LOAD DATA LOCAL INFILE '__PROJECT_ROOT__/data/processed/workforce_daily_clean.csv'
 INTO TABLE fact_workforce_daily FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n' IGNORE 1 LINES
 (agent_id,work_date,scheduled_minutes,absence_minutes,shrinkage_minutes);
 SHOW WARNINGS;
 
-LOAD DATA LOCAL INFILE 'I:/DA/data/processed/tickets_clean.csv'
+LOAD DATA LOCAL INFILE '__PROJECT_ROOT__/data/processed/tickets_clean.csv'
 INTO TABLE fact_tickets FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n' IGNORE 1 LINES
 (ticket_id,@owner,policy_id,channel,priority,customer_type,@category,@subcategory,
@@ -64,7 +64,7 @@ SET assigned_agent_id=NULLIF(@owner,''),
     csat_score=CAST(NULLIF(@csat,'') AS DECIMAL(3,1));
 SHOW WARNINGS;
 
-LOAD DATA LOCAL INFILE 'I:/DA/data/processed/ticket_work_logs_clean.csv'
+LOAD DATA LOCAL INFILE '__PROJECT_ROOT__/data/processed/ticket_work_logs_clean.csv'
 INTO TABLE fact_work_logs FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n' IGNORE 1 LINES
 (work_log_id,ticket_id,agent_id,work_date,handling_minutes);

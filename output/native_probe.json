@@ -1,0 +1,9 @@
+{
+  "date": "2026-10-08",
+  "error": "Error: Computer Use native pipe is unavailable: failed to connect native pipe: The system cannot find the file specified. (os error 2)",
+  "connected_document_sessions": {
+    "result": "No connected Codex document sessions were found.",
+    "executors": []
+  },
+  "blocked_step": "sky.list_apps inventory, before window selection or file opening"
+}

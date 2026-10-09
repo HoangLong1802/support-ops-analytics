@@ -1,0 +1,3 @@
+Command: python src/run_mysql.py --database support_ops_verify_20261008_followup
+Exit: 1
+mysql client unavailable: MYSQL_EXE unset and mysql not in PATH
