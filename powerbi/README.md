@@ -4,7 +4,7 @@
 
 - `customer_support_operations.pbix`: the report (5 pages) and the model.
 - `processed_queries.pq`: the Power Query (M) code. It reads `data/processed/*_clean.csv` through a `ProjectFolder` path; change that path if you clone the repo elsewhere.
-- `measures.dax`: DAX measures. It does not yet include the 13 measures I added later (Active Agents, Tickets per Agent, Low CSAT, backlog age, rolling 30-day average, month-over-month change, handling and shrinkage measures); those exist only in the PBIX.
+- `measures.dax`: DAX measures. All 68 measures; the 13 added later are at the end of the file.
 - `acceptance_reference.json`: reference numbers computed in Python.
 
 ## Model

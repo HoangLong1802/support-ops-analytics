@@ -34,9 +34,23 @@ More detail and caveats: [docs/05_business_insights.md](docs/05_business_insight
 
 The report is in [powerbi/customer_support_operations.pbix](powerbi/customer_support_operations.pbix). The screenshots were captured from Power BI Desktop. More in [powerbi/README.md](powerbi/README.md).
 
+```mermaid
+erDiagram
+    dim_date ||--o{ fact_tickets : local_created_date
+    dim_date ||--o{ fact_work_logs : work_date
+    dim_date ||--o{ fact_workforce_daily : work_date
+    dim_agents ||--o{ fact_tickets : assigned_agent_id
+    dim_agents ||--o{ fact_work_logs : agent_id
+    dim_agents ||--o{ fact_workforce_daily : agent_id
+    dim_sla_policies ||--o{ fact_tickets : policy_id
+    dim_categories ||--o{ fact_tickets : category_key
+```
+
+Backlog age looks large (median 99.7 days, oldest 351.5 days). I checked it: age is measured from `created_at` to the snapshot, none of the 578 unresolved tickets has a `resolved_at`, and 477 of them were created before September. So it is a property of the simulated data (some tickets are never closed), not a calculation or timestamp bug. I kept those rows.
+
 ## Checks
 
-I recomputed the main KPIs in plain Python and compared them with the DAX results. 19 of 21 checks matched; two time-based measures (rolling 30-day average, month-over-month change) were not independently recomputed. See [docs/test_report.md](docs/test_report.md).
+I recomputed the main KPIs in plain Python and compared them with the DAX results. All 21 checks matched, including the rolling 30-day average and month-over-month change. See [docs/test_report.md](docs/test_report.md).
 
 The MySQL scripts run in GitHub Actions on a MySQL 8.4 service container (see the badge above); I have not run them on a local MySQL server.
 

@@ -34,9 +34,23 @@ Chi tiết và giới hạn: [docs/05_business_insights.md](docs/05_business_ins
 
 File báo cáo: [powerbi/customer_support_operations.pbix](powerbi/customer_support_operations.pbix). Ảnh được chụp từ Power BI Desktop. Xem thêm [powerbi/README.md](powerbi/README.md).
 
+```mermaid
+erDiagram
+    dim_date ||--o{ fact_tickets : local_created_date
+    dim_date ||--o{ fact_work_logs : work_date
+    dim_date ||--o{ fact_workforce_daily : work_date
+    dim_agents ||--o{ fact_tickets : assigned_agent_id
+    dim_agents ||--o{ fact_work_logs : agent_id
+    dim_agents ||--o{ fact_workforce_daily : agent_id
+    dim_sla_policies ||--o{ fact_tickets : policy_id
+    dim_categories ||--o{ fact_tickets : category_key
+```
+
+Tuổi backlog trông rất lớn (trung vị 99,7 ngày, lâu nhất 351,5 ngày). Tôi đã kiểm tra: tuổi tính từ `created_at` đến thời điểm snapshot, không ticket nào trong 578 ticket chưa xử lý có `resolved_at`, và 477 ticket được tạo trước tháng 9. Đây là đặc tính của dữ liệu mô phỏng (một số ticket không bao giờ đóng), không phải lỗi tính toán hay timestamp. Tôi giữ nguyên các dòng này.
+
 ## Kiểm tra
 
-Tôi tính lại các KPI chính bằng Python thuần và so với kết quả DAX. 19/21 kiểm tra khớp; hai measure theo thời gian (trung bình trượt 30 ngày, thay đổi theo tháng) chưa được tính lại độc lập. Xem [docs/test_report.md](docs/test_report.md).
+Tôi tính lại các KPI chính bằng Python thuần và so với kết quả DAX. Cả 21 kiểm tra đều khớp, gồm trung bình trượt 30 ngày và thay đổi theo tháng. Xem [docs/test_report.md](docs/test_report.md).
 
 Các script MySQL chạy trên GitHub Actions với MySQL 8.4 thật (xem badge phía trên); tôi chưa chạy trên MySQL cài local.
 

@@ -23,8 +23,8 @@ Run date: 2026-10-09. Only tests that were executed are listed.
 | 14 | Handling Hours per Agent; Minutes per Ticket | 1121.32; 82.14 | 1121.32; 82.14 | PASS |
 | 15 | Absence Rate %; Shrinkage Rate % | 2.5616%; 21.1179% | 2.5616%; 21.1179% | PASS |
 | 16 | Sep-2026 tickets / Resolution SLA % (date filter) | 1,216 / 74.9791% | 1,216 / 74.9791% | PASS |
-| 17 | Rolling 30D Avg Daily Tickets at 2026-09-30 | 40.533 (expected from earlier DAX, not independently recomputed) | 40.533 | UNVERIFIED independently |
-| 18 | Resolution SLA MoM change, Sep-2026 | -2.215 pp (expected from earlier DAX) | -2.215 pp | UNVERIFIED independently |
+| 17 | Rolling 30D Avg Daily Tickets at 2026-09-30 | 40.533 (Python: 1,216 Sep tickets by UTC+7 date / 30) | 40.533 | PASS (Python recomputed 2026-10-09) |
+| 18 | Resolution SLA MoM change, Sep-2026 | -2.215 pp (Python: Sep 74.98% minus Aug 77.19%) | -2.215 pp | PASS (Python recomputed 2026-10-09) |
 | 19 | Duplicate ticket_id in processed data | 0 | 0 | PASS |
 | 20 | Tickets with unknown policy_id / null agent | 0 / 0 | 0 / 0 | PASS |
 | 21 | Work-log tickets missing from tickets | 0 | 0 | PASS |

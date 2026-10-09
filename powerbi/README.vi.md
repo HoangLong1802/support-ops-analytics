@@ -4,7 +4,7 @@
 
 - `customer_support_operations.pbix`: báo cáo (5 trang) và mô hình dữ liệu.
 - `processed_queries.pq`: mã Power Query (M). Đọc `data/processed/*_clean.csv` qua đường dẫn `ProjectFolder`; hãy đổi đường dẫn này nếu clone repo sang chỗ khác.
-- `measures.dax`: các measure DAX. File chưa gồm 13 measure thêm sau (Active Agents, Tickets per Agent, Low CSAT, tuổi backlog, trung bình trượt 30 ngày, thay đổi theo tháng, giờ xử lý và shrinkage); chúng chỉ có trong PBIX.
+- `measures.dax`: các measure DAX. Gồm cả 68 measure; 13 measure thêm sau nằm cuối file.
 - `acceptance_reference.json`: số liệu tham chiếu tính bằng Python.
 
 ## Mô hình

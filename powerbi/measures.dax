@@ -93,3 +93,45 @@ Weekday Average Daily Tickets = DIVIDE ( [Weekday Tickets], [Weekday Calendar Da
 Weekend Average Daily Tickets = DIVIDE ( [Weekend Tickets], [Weekend Calendar Days] )
 Weekday Weekend Average Ratio = DIVIDE ( [Weekday Average Daily Tickets], [Weekend Average Daily Tickets] )
 Weekday Weekend Total Ratio = DIVIDE ( [Weekday Tickets], [Weekend Tickets] )
+
+// Measures added after the first version (also in the PBIX).
+
+// Distinct agents owning at least one ticket in the current filter context (assigned_agent_id not blank).
+Active Agents = DISTINCTCOUNT ( fact_tickets[assigned_agent_id] )
+
+// Assigned tickets / distinct owning agents. Weighted ratio, never an average of per-agent ratios. Unassigned tickets excluded from numerator.
+Tickets per Agent = DIVIDE ( CALCULATE ( [Total Tickets], NOT ISBLANK ( fact_tickets[assigned_agent_id] ) ), [Active Agents] )
+
+// Completed tickets with a CSAT score of 1 or 2.
+Low CSAT Responses = CALCULATE ( [Total Tickets], fact_tickets[completed] = TRUE (), fact_tickets[csat_score] >= 1, fact_tickets[csat_score] <= 2 )
+
+// Low CSAT responses / all CSAT responses. Blank scores excluded from the denominator.
+Low CSAT Rate % = DIVIDE ( [Low CSAT Responses], [CSAT Responses] )
+
+// Mean age in hours at the 01/10/2026 00:00 UTC+7 snapshot of tickets not completed.
+Average Backlog Age Hours = DIVIDE ( AVERAGEX ( FILTER ( fact_tickets, fact_tickets[completed] = FALSE () ), fact_tickets[backlog_age_minutes] ), 60 )
+
+// Median age in hours at the snapshot of tickets not completed.
+Median Backlog Age Hours = DIVIDE ( MEDIANX ( FILTER ( fact_tickets, fact_tickets[completed] = FALSE () ), fact_tickets[backlog_age_minutes] ), 60 )
+
+// Tickets created in the 30 calendar days ending on the last visible date / 30.
+Rolling 30D Avg Daily Tickets = DIVIDE ( CALCULATE ( [Total Tickets], DATESINPERIOD ( dim_date[date_key], MAX ( dim_date[date_key] ), -30, DAY ) ), 30 )
+
+// Resolution SLA Compliance % for the prior calendar month of the visible period.
+Resolution SLA Compliance % Previous Month = CALCULATE ( [Resolution SLA Compliance %], DATEADD ( dim_date[date_key], -1, MONTH ) )
+
+// Resolution SLA Compliance % minus previous month, in percentage points. Blank when no prior month exists.
+Resolution SLA MoM Change pp = VAR prev = [Resolution SLA Compliance % Previous Month] RETURN IF ( ISBLANK ( prev ) || ISBLANK ( [Resolution SLA Compliance %] ), BLANK (), ( [Resolution SLA Compliance %] - prev ) * 100 )
+
+// Handling hours / distinct agents with a work log in context.
+Handling Hours per Agent = DIVIDE ( [Handling Hours], DISTINCTCOUNT ( fact_work_logs[agent_id] ) )
+
+// Handling minutes / distinct tickets worked. A ticket can have several work logs.
+Handling Minutes per Ticket = DIVIDE ( [Handling Hours] * 60, DISTINCTCOUNT ( fact_work_logs[ticket_id] ) )
+
+// Absence hours / scheduled hours.
+Absence Rate % = DIVIDE ( [Absence Hours], [Scheduled Hours] )
+
+// Shrinkage hours / scheduled hours.
+Shrinkage Rate % = DIVIDE ( [Shrinkage Hours], [Scheduled Hours] )
+

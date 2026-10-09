@@ -19,6 +19,6 @@ Dữ liệu mô phỏng, nên case study thể hiện phương pháp chứ khôn
 
 **Đề xuất.** Xem hàng đợi technical trước (chuyển giao, cơ cấu priority); đối chiếu thời điểm ticket đến với timestamp xử lý trước khi đổi ca; đọc CSAT cùng tỷ lệ phản hồi. Đây là giả thuyết cần kiểm chứng, không phải cải thiện đã đạt được.
 
-**Giới hạn.** Các quy luật được cài sẵn trong mô phỏng. Reopen rate không phải first-contact resolution. Chưa điều chỉnh case mix. Script MySQL chạy trong CI trên MySQL 8.4, không phải server local. Hai measure DAX theo thời gian chưa được kiểm tra độc lập.
+**Giới hạn.** Các quy luật được cài sẵn trong mô phỏng. Reopen rate không phải first-contact resolution. Chưa điều chỉnh case mix. Script MySQL chạy trong CI trên MySQL 8.4, không phải server local.
 
 Liên kết: [KPI](kpi_definitions.md) · [chất lượng dữ liệu](data_quality_report.md) · [báo cáo kiểm tra](test_report.md) · [Power BI](../powerbi/README.vi.md) · [workbook](../output/customer_support_analysis.xlsx)
